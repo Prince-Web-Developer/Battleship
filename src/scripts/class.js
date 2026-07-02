@@ -21,3 +21,4 @@ class Ship{
 
 
 
+export {Ship}
