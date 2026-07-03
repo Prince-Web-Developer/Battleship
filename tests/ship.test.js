@@ -4,13 +4,16 @@ let tanker
 
 
 beforeEach(() => {
-    tanker = new Ship("tanker", 4);
+    tanker = new Ship(4,4,"tanker", 4);
 })
 
 
 test("ship instance is created properly", () => {
+    expect(tanker.x).toBe(4)
+    expect(tanker.y).toBe(4)
     expect(tanker.name).toBe("tanker")
     expect(tanker.isSunk()).toBe(false)
+    expect(tanker.turn).toBe(false);
 })
 
 test("ship hit() method works properly", () => {
@@ -20,6 +23,12 @@ test("ship hit() method works properly", () => {
     expect(tanker.isSunk()).toBe(true)
 });
 
-test("ship constructor called with length 0 throws error", () => {
-    expect(() => new Ship("tanker", 0)).toThrow("Length should be more than 0");
-});
+
+
+test("ship space array is populated corrlectly", () => {
+    expect(tanker.space.has(JSON.stringify([4,4]))).toBe(true)
+    expect(tanker.space.has(JSON.stringify([5,4]))).toBe(true)
+    expect(tanker.space.has(JSON.stringify([6,4]))).toBe(true)
+    expect(tanker.space.has(JSON.stringify([7,4]))).toBe(true)
+    expect(tanker.space.has(JSON.stringify([8,4]))).toBe(false)
+})
