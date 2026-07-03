@@ -32,7 +32,7 @@ test("gameboard can't place ship on location where existing ship is there", () =
 
 test("gameboard can't place ship outside the board", () => {
   expect(() => gameBoard.placeShipe("submarie", 6, 2, 6, true)).toThrow(
-    "inappropriate length or cords",
+    "invalid position",
   );
 });
 
@@ -46,6 +46,10 @@ test("gameboard receive attack can't receive attack for same position", () => {
     "position already attacked",
   );
 });
+
+test("gameboard receive attack throws error when invalid position is provided", () => {
+  expect(() => gameBoard.receiveAttack(-1, 2)).toThrow("invalid position");
+})
 
 test("gameboard receive attack works on ships", () => {
   gameBoard.receiveAttack(1, 1);

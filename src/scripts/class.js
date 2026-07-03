@@ -31,13 +31,16 @@ class Gameboard {
   }
 
   placeShipe(name, length, x, y, turn = false) {
+
     if (
-      length > this.boardSize ||
-      length <= 0 ||
-      (turn && length + y > this.boardSize) ||
+      this.checkCord(x, y) || (turn && length + y > this.boardSize) ||
       (!turn && length + x > this.boardSize)
     )
-      throw new Error("inappropriate length or cords");
+      throw new Error("invalid position");
+    if (
+      length > this.boardSize ||
+      length <= 0 )
+      throw new Error("inappropriate length");
     
    
     const newShipCords = []
@@ -59,6 +62,7 @@ class Gameboard {
 
 
   receiveAttack(x, y) {
+    if (this.checkCord(x, y)) throw new Error("invalid position");
     if (this.attackedPlaces.has(`[${x},${y}]`)) throw new Error("position already attacked");
     
 
@@ -69,6 +73,14 @@ class Gameboard {
       cell.hit()
       return cell
     } 
+  }
+
+
+
+
+  checkCord(x,y) {
+    if (x < 0 || y < 0 || x > this.boardSize || y > this.boardSize) return true
+    return false
   }
 
 
