@@ -3,7 +3,7 @@ import audio from "/asssets/sounds/universfield-computer-mouse-click-352734.mp3"
 const mouseClickAudio = new Audio(audio);
 mouseClickAudio.load();
 
-const screens = document.querySelectorAll("body > div")
+const screens = document.querySelectorAll(".screen");
 
 const pageFadeInAnimation = animateBody()
 history.replaceState("intro", "", document.location.href);
