@@ -8,6 +8,7 @@ export default {
   plugins: [
     new HtmlWebpackPlugin({
       template: "./src/template.html",
+      filename: "index.html",
     }),
   ],
   module: {
@@ -28,10 +29,22 @@ export default {
         test: /\.(woff2|woff)$/i,
         type: "asset/resource",
       },
+      {
+        test: /\.(mp3)$/,
+        use: [
+          {
+            loader: "file-loader",
+            options: {
+              name: "[name].[ext]",
+              outputPath: "static/media/",
+            },
+          },
+        ],
+      },
     ],
   },
   output: {
-    filename: "main.js",
+    filename: "js/[name].[contenthash].js",
     path: path.resolve(import.meta.dirname, "dist"),
     clean: true,
   },
