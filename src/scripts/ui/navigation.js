@@ -6,6 +6,7 @@ mouseClickAudio.load();
 const screens = document.querySelectorAll("body > div")
 
 const pageFadeInAnimation = animateBody()
+history.replaceState("intro", "", document.location.href);
 
 
 
@@ -15,11 +16,21 @@ buttons.forEach((button) =>
     button.addEventListener("click", async (e) => {
         mouseClickAudio.play().catch((e) => console.log(e))
         setTimeout(() => {
+            const screen = e.target.dataset.screenId
+            history.pushState(screen, "", screen);
             pageFadeInAnimation.play()
-            changeScreen(e.target.dataset.screenId);
+            changeScreen(screen);
         }, 1000) // 1ms
   }),
 );
+
+
+
+window.addEventListener("popstate", (event) => {
+  if (event.state) {
+    changeScreen(event.state);
+  }
+});
 
 
 function changeScreen(newScreen) {
