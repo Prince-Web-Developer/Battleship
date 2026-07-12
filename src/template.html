@@ -4,17 +4,36 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Battleship</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bowlby+One+SC&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+      rel="stylesheet"
+    />
   </head>
   <body>
-
     <div class="screen" id="intro">
       <h1>Battleship</h1>
       <ul class="menu">
-        <li><button type="button" class="menu-button navigationButton" id="playBtn" data-screen-id = "play">Play</button></li>
-        <li><button type="button" class="menu-button navigationButton" data-screen-id = "help">Help</button></li>
+        <li>
+          <button
+            type="button"
+            class="menu-button navigationButton"
+            id="playBtn"
+            data-screen-id="play"
+          >
+            Play
+          </button>
+        </li>
+        <li>
+          <button
+            type="button"
+            class="menu-button navigationButton"
+            data-screen-id="help"
+          >
+            Help
+          </button>
+        </li>
       </ul>
     </div>
 
@@ -25,29 +44,76 @@
         </div>
         <div class="main flexColumn">
           <p>
-            Battleship is a classic two‑player strategy game where each player secretly arranges a fleet of ships on a grid. Players then take turns calling out coordinates to "fire" shots, trying to locate and sink the opponent’s ships.
+            Battleship is a classic two‑player strategy game where each player
+            secretly arranges a fleet of ships on a grid. Players then take
+            turns calling out coordinates to "fire" shots, trying to locate and
+            sink the opponent’s ships.
           </p>
           <ul>
-            <li>🎯 Objective: Sink all of your opponent’s ships before they sink yours.</li>
-            <li>🛳️ Gameplay: Each ship occupies consecutive squares on the grid. Players mark hits and misses as they guess coordinates.</li>
-            <li>⚔️ Winning: A ship is sunk when all its squares are hit. The first player to sink the entire fleet wins.</li>
+            <li>
+              🎯 Objective: Sink all of your opponent’s ships before they sink
+              yours.
+            </li>
+            <li>
+              🛳️ Gameplay: Each ship occupies consecutive squares on the grid.
+              Players mark hits and misses as they guess coordinates.
+            </li>
+            <li>
+              ⚔️ Winning: A ship is sunk when all its squares are hit. The first
+              player to sink the entire fleet wins.
+            </li>
           </ul>
 
+          <p>
+            Read More on<a
+              class="wikipedia"
+              href="https://en.wikipedia.org/wiki/Battleship_(game)"
+              >wikipedia</a
+            >
+          </p>
 
-          <p>Read More on<a class="wikipedia" href="https://en.wikipedia.org/wiki/Battleship_(game)">wikipedia</a></p>
-
-
-          <a href="https://youtu.be/4gHJlYLomrs?si=wuGwQTuFheNQky8Y">Visual learner?</a>
-
+          <a href="https://youtu.be/4gHJlYLomrs?si=wuGwQTuFheNQky8Y"
+            >Visual learner?</a
+          >
         </div>
       </div>
-      <div class="backParent"><button type="button" class="back navigationButton" data-screen-id = "intro" aria-label="back"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#000000"><path d="m313-440 224 224-57 56-320-320 320-320 57 56-224 224h487v80H313Z"/></svg></button></div>
+      <div class="backParent">
+        <button
+          type="button"
+          class="back navigationButton"
+          data-screen-id="intro"
+          aria-label="back"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            height="24px"
+            viewBox="0 -960 960 960"
+            width="24px"
+            fill="#000000"
+          >
+            <path
+              d="m313-440 224 224-57 56-320-320 320-320 57 56-224 224h487v80H313Z"
+            />
+          </svg>
+        </button>
+      </div>
     </div>
 
     <div id="play" class="none screen">
       <div class="celling"></div>
+      <form id="gameMode" action="" method="get">
+        <p class="info font">Select game Mode</p>
+        <div class="wrapper">
+          <button type="submit" class="font navigationButton" data-screen-id="game" value="comp">Computer</button>
+          <button type="submit" class="font navigationButton"  data-screen-id="game" value="two">
+            Two players mode
+          </button>
+        </div>
+      </form>
     </div>
 
-      <canvas id="canvas1"></canvas>
+    <div id="game"></div>
+
+    <canvas id="canvas1"></canvas>
   </body>
 </html>
