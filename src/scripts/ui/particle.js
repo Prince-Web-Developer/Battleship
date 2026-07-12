@@ -1,26 +1,3 @@
-let canvas = document.querySelector("canvas")
-
-const ctx = canvas.getContext("2d");
-
-function resizeCanvas() {
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
-}
-
-
-resizeCanvas();
-
-
-window.addEventListener("resize", resizeCanvas);
-
-
-
-
-
-
-
-
-
 let particles = []
 
 document.addEventListener(("mousemove"), (e) => {
@@ -47,7 +24,7 @@ class Particle{
         if (this.size > 0.2) this.size -= 0.1
     }
 
-    draw() {
+    draw(ctx) {
         ctx.fillStyle = "red"
         ctx.beginPath()
         ctx.arc(this.x, this.y, this.size, 0, 360)
@@ -56,24 +33,22 @@ class Particle{
 }
 
 
-
-function showParticles() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height)
+function showParticles(ctx) {
     for (let index = particles.length - 1; index >= 0; index--) {
-        const particle = particles[index]
-        particle.update()
+      const particle = particles[index];
+      particle.update();
 
-        if (particle.size < 0.2) {
-            particles.splice(index, 1)
-            continue
-        }
+      if (particle.size < 0.2) {
+        particles.splice(index, 1);
+        continue;
+      }
 
-        particle.draw()
+      particle.draw(ctx);
     }
-    requestAnimationFrame(showParticles)
 }
 
-showParticles()
+
+export {showParticles}
 
 
 

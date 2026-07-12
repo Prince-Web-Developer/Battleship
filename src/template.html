@@ -10,10 +10,10 @@
   </head>
   <body>
 
-    <div class="intro screen" id="intro">
+    <div class="screen" id="intro">
       <h1>Battleship</h1>
       <ul class="menu">
-        <li><button type="button" class="menu-button navigationButton" data-screen-id = "play">Play</button></li>
+        <li><button type="button" class="menu-button navigationButton" id="playBtn" data-screen-id = "play">Play</button></li>
         <li><button type="button" class="menu-button navigationButton" data-screen-id = "help">Help</button></li>
       </ul>
     </div>
@@ -42,6 +42,10 @@
         </div>
       </div>
       <div class="backParent"><button type="button" class="back navigationButton" data-screen-id = "intro" aria-label="back"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#000000"><path d="m313-440 224 224-57 56-320-320 320-320 57 56-224 224h487v80H313Z"/></svg></button></div>
+    </div>
+
+    <div id="play" class="none screen">
+      <div class="celling"></div>
     </div>
 
       <canvas id="canvas1"></canvas>
