@@ -2,10 +2,12 @@ import ship1 from "/asssets/images/ship1.png";
 import ship2 from "/asssets/images/ship2.png";
 import ship3 from "/asssets/images/ship3.png";
 import ship4 from "/asssets/images/ship4.png";
+import ship5 from "/asssets/images/ship5.png";
+import ship6 from "/asssets/images/ship6.png";
 import { getWindowHeight, getWindowWidth } from "./window.js";
 
 
-const shipsImg = [ship1, ship2, ship3, ship4]
+const shipsImg = [ship1, ship2, ship3, ship4,ship5,ship6]
 const shipImages = shipsImg.map((src) => {
   const img = new Image();
   img.src = src;

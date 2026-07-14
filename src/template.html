@@ -106,19 +106,20 @@
         <div class="wrapper">
           <button
             type="submit"
-            class="font navigationButton"
+            class="comp navigationButton"
             data-screen-id="game"
             value="comp"
+            aria-label="computer"
           >
-            Computer
+            
           </button>
           <button
             type="submit"
-            class="font navigationButton"
+            class="two navigationButton"
             data-screen-id="game"
             value="two"
+            aria-label="two players mode"
           >
-            Two players mode
           </button>
         </div>
       </form>
@@ -135,9 +136,31 @@
           <div class="board b2"></div>
         </div>
       </div>
-      <div class="shipBoard">
+      <div class="shipBoard height40">
         <div class="boardContainer">
-          <div class="downArrow"><svg xmlns="http://www.w3.org/2000/svg" height="62px" viewBox="0 -960 960 960" width="62px" fill="#000000"><path d="M480-360 280-560h400L480-360Z"/></svg></div>
+          <div class="downArrow"><svg xmlns="http://www.w3.org/2000/svg" height="62px" viewBox="0 -960 960 960" width="62px" fill="#000000"><path d="m280-400 200-200 200 200H280Z"/></svg></div>
+        </div>
+        <div class="boardInner">
+          <div class="ship">
+            <img src="/asssets/images/ship1.png" alt="battleship">
+            <p>4 holes</p>
+          </div>
+          <div class="ship">
+            <img src="/asssets/images/ship2.png" alt="carrier">
+            <p>5 holes</p>
+          </div>
+          <div class="ship">
+            <img src="/asssets/images/ship4.png" alt="destroyer">
+            <p>3 holes</p>
+          </div>
+          <div class="ship">
+            <img src="/asssets/images/ship5.png" alt="patrol">
+            <p>2 holes</p>
+          </div>
+          <div class="ship">
+            <img src="/asssets/images/ShipSubMarineHull.png" alt="submarine">
+            <p>3 holes</p>
+          </div>
         </div>
       </div>
     </div>

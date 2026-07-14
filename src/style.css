@@ -220,11 +220,18 @@ li{
     justify-content: center;
   }
 
-  .font{
+  .font,button::after{
     font-family: "Bowlby One SC", sans-serif;
     color: grey; 
     text-align: center;
+    overflow: hidden;
   }
+
+  
+
+  
+
+  
 
   .info{
     font-size: 1.5em;
@@ -251,8 +258,33 @@ li{
     background-color: black;
   }
 
+  .two:after{
+    content: "Two Players Mode"
+  }
+  .comp:after{
+    content: "Computer";
+  }
+
+  button::after{
+    background: linear-gradient(to right,black 50%,white 50%);
+    background-size: 200%;
+    background-clip:text;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: background 2s,color 2s;
+  }
+
+  
+
   button:hover{
     cursor: pointer;
+  }
+  button:hover::after{
+    background-position: 100% 0%;
+    color: transparent;
   }
   button:active{
     transform: scale(0.9);
@@ -309,7 +341,18 @@ li{
     position: fixed;
     bottom: 0;
     border-radius: 12px 12px 0px 0px;
-    background-color:cadetblue;
+    background-color: cadetblue;
+    transition: height 0.5s;
+  }
+
+  .boardInner{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+  }
+
+  .height40{
+    height:40px;
   }
 
   .boardContainer{

@@ -1,5 +1,5 @@
 import { Player, Gameboard } from "./class.js"
-import { getWindowHeight } from "./side_ui/window.js"
+
 
 
 const player1Board = document.querySelector(".b1")
@@ -35,33 +35,6 @@ function createBoard() {
     }
     return fragment
 }
-
-let resize = false
-const shipBoard = document.querySelector(".shipBoard");
-const downArrow = document
-    .querySelector(".downArrow")
-
-
-
-const resizeTrue = () => (resize = true);
-const resizeFalse = () => (resize = false);
-
-
-downArrow.addEventListener("mousedown",resizeTrue);
-document.addEventListener("mouseup",resizeFalse)
-
-downArrow.addEventListener("touchstart", resizeTrue);
-document.addEventListener("touchend", resizeFalse);
-
-
-
-function resizeBoard(e) {
-    if (!resize) return
-    const yCord = e.clientY
-    const documentHeight = document.documentElement.clientHeight
-    if (yCord < documentHeight * 0.2 || yCord > documentHeight - 40) return; 
-    shipBoard.style.top = `${e.y}px`
-} 
-
-
-export {resizeBoard}
+const shipsBoard = document.querySelector(".shipBoard")
+const shipsBoardBtn = document.querySelector(".downArrow");
+shipsBoardBtn.addEventListener("click", () => shipsBoard.classList.toggle("height40"));
