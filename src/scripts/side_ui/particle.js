@@ -1,10 +1,14 @@
+
 let particles = []
 
-document.addEventListener(("mousemove"), (e) => {
+
+
+
+function addNewParticles(e) {
     for (let index = 0; index < 5; index++) {
-        particles.push(new Particle(e.x,e.y))
+      particles.push(new Particle(e.x, e.y));
     }
-})
+}
 
 
 class Particle{
@@ -48,7 +52,7 @@ function showParticles(ctx) {
 }
 
 
-export {showParticles}
+export {showParticles,addNewParticles}
 
 
 

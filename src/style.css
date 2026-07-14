@@ -248,16 +248,90 @@ li{
     padding: 12px 18px;
     border: 2px solid grey;
     transition: transform 0.5s;
+    background-color: black;
   }
 
   button:hover{
-    background-color: black;
     cursor: pointer;
   }
-
   button:active{
     transform: scale(0.9);
   }
+}
+
+
+
+#game{
+  border-collapse:collapse;
+  max-width: 100vw;
+  min-height: 100vh;
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+
+  .container{
+    display: flex;
+    width: 100%;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 60px;
+  }
+
+
+  .player{
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    align-items: center;
+  }
+
+
+  .board{
+    width: min(100%,500px);
+    background: url("/asssets/images/art-removebg-preview\ \(1\).png");
+    background-size: 1000px;
+    background-position: center;
+    min-width: 280px;
+    display: grid;
+    grid-template-columns: repeat(10,1fr);
+  }
+
+  .board > *{
+    aspect-ratio: 1;
+    border: 1px solid black;
+  }
+
+
+  .shipBoard{
+    width: 80%;
+    position: fixed;
+    bottom: 0;
+    border-radius: 12px 12px 0px 0px;
+    background-color:cadetblue;
+  }
+
+  .boardContainer{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding-bottom: 20px;
+  }
+
+  .downArrow{
+    background-color:wheat;
+    border-radius: 0px 0px 12px 12px;
+    border: 1px solid black;
+    border-top: 0;
+    width: 100px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+  }
+
 }
 
 

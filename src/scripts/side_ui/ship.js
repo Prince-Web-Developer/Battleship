@@ -2,6 +2,8 @@ import ship1 from "/asssets/images/ship1.png";
 import ship2 from "/asssets/images/ship2.png";
 import ship3 from "/asssets/images/ship3.png";
 import ship4 from "/asssets/images/ship4.png";
+import { getWindowHeight, getWindowWidth } from "./window.js";
+
 
 const shipsImg = [ship1, ship2, ship3, ship4]
 const shipImages = shipsImg.map((src) => {
@@ -65,8 +67,6 @@ function getAngleInRadian(degree) {
 
 
 const boundary = 50
-const xBoundary = window.innerWidth + boundary
-const yBoundary = window.innerHeight + boundary
 
 
 function addNewShip() {
@@ -90,7 +90,7 @@ function drawShips(ctx) {
     for (let index = ships.length - 1; index >= 0; index--) {
         const ship = ships[index];
         ship.update();
-        if (ship.x <= -boundary || ship.x > xBoundary || ship.y > yBoundary) {
+        if (ship.x <= -boundary || ship.x > getWindowWidth() + boundary || ship.y > getWindowHeight() + boundary) {
             ships.splice(index, 1)
             continue
         }

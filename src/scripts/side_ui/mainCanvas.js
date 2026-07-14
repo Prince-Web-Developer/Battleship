@@ -1,5 +1,6 @@
 import { showParticles } from "./particle.js";
-import ship,{drawShips} from "./ship.js";
+import ship, { drawShips } from "./ship.js";
+import { getWindowHeight,getWindowWidth } from "./window.js";
 
 
 let canvas = document.querySelector("canvas");
@@ -7,8 +8,8 @@ let canvas = document.querySelector("canvas");
 const ctx = canvas.getContext("2d");
 
 function resizeCanvas() {
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
+  canvas.width = getWindowWidth();
+  canvas.height = getWindowHeight();
 }
 
 resizeCanvas();

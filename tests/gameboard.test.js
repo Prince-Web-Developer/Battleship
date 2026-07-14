@@ -6,7 +6,7 @@ beforeAll(() => {
 });
 
 test("gameboard is created with all its indexs been array with null value", () => {
-  const board = gameBoard.gameBoard;
+  const board = gameBoard.gameboard;
   board.forEach((row) => {
     row.forEach((cell) => expect(cell).toBe(null));
   });

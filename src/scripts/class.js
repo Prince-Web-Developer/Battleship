@@ -16,10 +16,10 @@ class Ship {
 }
 
 class Gameboard {
+  static BOARD_SIZE = 10;
   constructor() {
-    this.boardSize = 8;
-    this.gameBoard = Array.from({ length: this.boardSize }, () =>
-      Array(this.boardSize).fill(null),
+    this.gameboard = Array.from({ length: Gameboard.BOARD_SIZE }, () =>
+      Array(Gameboard.BOARD_SIZE).fill(null),
     );
     this.ships = [];
     this.attackedPlaces = new Set();
@@ -28,18 +28,18 @@ class Gameboard {
   placeShipe(name, length, x, y, turn = false) {
     if (
       this.checkCord(x, y) ||
-      (turn && length + y > this.boardSize) ||
-      (!turn && length + x > this.boardSize)
+      (turn && length + y > Gameboard.BOARD_SIZE) ||
+      (!turn && length + x > Gameboard.BOARD_SIZE)
     )
       throw new Error("invalid position");
-    if (length > this.boardSize || length <= 0)
+    if (length > Gameboard.BOARD_SIZE || length <= 0)
       throw new Error("inappropriate length");
 
     const newShipCords = [];
 
     for (let index = 0; index < length; index++) {
       const cords = !turn ? [x + index, y] : [x, y + index];
-      const cell = this.gameBoard[cords[0]][cords[1]];
+      const cell = this.gameboard[cords[0]][cords[1]];
       if (cell instanceof Ship)
         throw new Error(`${name} can't be placed as ${cell.name} is there.`);
       newShipCords.push(cords);
@@ -48,7 +48,7 @@ class Gameboard {
     const newShip = new Ship(name, length);
 
     newShipCords.forEach(
-      (cord) => (this.gameBoard[cord[0]][cord[1]] = newShip),
+      (cord) => (this.gameboard[cord[0]][cord[1]] = newShip),
     );
     this.ships.push(newShip);
   }
@@ -60,7 +60,7 @@ class Gameboard {
 
     this.attackedPlaces.add(`[${x},${y}]`);
 
-    const cell = this.gameBoard[x][y];
+    const cell = this.gameboard[x][y];
     if (cell instanceof Ship) {
       cell.hit();
       return cell;
@@ -68,7 +68,8 @@ class Gameboard {
   }
 
   checkCord(x, y) {
-    if (x < 0 || y < 0 || x >= this.boardSize || y >= this.boardSize) return true;
+    if (x < 0 || y < 0 || x >= Gameboard.BOARD_SIZE || y >= Gameboard.BOARD_SIZE)
+      return true;
     return false;
   }
 
@@ -88,7 +89,6 @@ class Gameboard {
   }
 }
 
-
 class Player {
   constructor(name) {
     this.name = name;
@@ -96,29 +96,29 @@ class Player {
   }
 
   sunkShips() {
-    return this.gameboard.sunkShips()
+    return this.gameboard.sunkShips();
   }
-  receiveAttack(x,y) {
-    return this.gameboard.receiveAttack(x,y)
+  receiveAttack(x, y) {
+    return this.gameboard.receiveAttack(x, y);
   }
-  placeShipe(name,length,x,y,turn) {
-    return this.gameboard.placeShipe(name,length,x,y,turn)
+  placeShipe(name, length, x, y, turn) {
+    return this.gameboard.placeShipe(name, length, x, y, turn);
   }
 }
 
-class Computer extends Player{
-  constructor(name,allships) {
-    super(name)
-    this.placeAllShips(allships)
+class Computer extends Player {
+  constructor(name, allships) {
+    super(name);
+    this.placeAllShips(allships);
   }
-
 
   placeAllShips(allships) {
     let index = 0;
     const allShipsLength = allships.length;
+    const boardSize = Gameboard.BOARD_SIZE + 1;
     while (index < allShipsLength) {
-      const randomX = Math.floor(Math.random() * 8);
-      const randomY = Math.floor(Math.random() * 8);
+      const randomX = Math.floor(Math.random() * boardSize);
+      const randomY = Math.floor(Math.random() * boardSize);
       const turn = Boolean(Math.floor(Math.random() * 2));
 
       const ship = allships[index];
@@ -131,9 +131,5 @@ class Computer extends Player{
     }
   }
 }
-
-
-
-
 
 export { Ship, Gameboard, Player, Computer };
