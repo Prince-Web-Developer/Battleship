@@ -107,14 +107,13 @@ class Player {
 
 class Computer extends Player {
   static variations = [[1, 0], [-1, 0], [0, 1], [0, -1]]
-  constructor(allships, oppenetBoard) {
+  constructor(allships) {
     super();
     this.remainingPlacesArray = []
     this.remainingPlaces = new Map(Array.from({ length: 100 }, (_, i) => {
       this.remainingPlacesArray.push(i)
       return [i,i]
     }))
-    this.oppenetBoard = oppenetBoard
     
     this.boardLength = Gameboard.BOARD_SIZE
     this.attacks = new Set()
@@ -142,7 +141,7 @@ class Computer extends Player {
 
 
 
-  playTurn() {
+  playTurn(oppenetBoard) {
 
     let key
 
@@ -173,7 +172,7 @@ class Computer extends Player {
 
     const [x, y] = this.generateCords(key)
     
-    if (this.oppenetBoard[x][y]) {
+    if (oppenetBoard[x][y]) {
       this.generateAdjanceCords(x,y)
       this.lastShot = [x,y]
     }
