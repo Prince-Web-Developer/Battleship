@@ -119,15 +119,15 @@ class Computer extends Player {
     this.boardLength = Gameboard.BOARD_SIZE
     this.attacks = new Set()
     this.lastShot = null
+    this.placeAllShips(allships);
   }
 
   placeAllShips(allships) {
     let index = 0;
     const allShipsLength = allships.length;
-    const boardSize = this.boardLength + 1;
     while (index < allShipsLength) {
-      const randomX = Math.floor(Math.random() * boardSize);
-      const randomY = Math.floor(Math.random() * boardSize);
+      const randomX = Math.floor(Math.random() * this.boardLength);
+      const randomY = Math.floor(Math.random() * this.boardLength);
       const turn = Boolean(Math.floor(Math.random() * 2));
 
       const ship = allships[index];

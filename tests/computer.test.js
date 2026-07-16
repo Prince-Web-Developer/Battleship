@@ -6,13 +6,14 @@ function createShipObject(name, length, x, y, turn = false) {
 
 let computer;
 
-describe("play function", () => {
-  beforeAll(() => {
-    const player = new Player();
-    player.placeShipe("patrolBoat", 2, 7, 5);
-    computer = new Computer([], player.gameboard.gameboard);
-  });
 
+beforeAll(() => {
+  const player = new Player();
+  player.placeShipe("patrolBoat", 2, 7, 5);
+  computer = new Computer([createShipObject("tanker",5,3,3)], player.gameboard.gameboard);
+});
+
+describe("play function", () => {
   test("returns value in right format", () => {
     const spy = jest.spyOn(computer, "getRandomValue").mockReturnValueOnce(75);
     expect(computer.playTurn()).toEqual({ x: 7, y: 5 });
