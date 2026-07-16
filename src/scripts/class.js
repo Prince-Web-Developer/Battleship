@@ -90,8 +90,7 @@ class Gameboard {
 }
 
 class Player {
-  constructor(name) {
-    this.name = name;
+  constructor() {
     this.gameboard = new Gameboard();
   }
 
@@ -107,15 +106,25 @@ class Player {
 }
 
 class Computer extends Player {
-  constructor(name, allships) {
-    super(name);
-    this.placeAllShips(allships);
+  static variations = [[1, 0], [-1, 0], [0, 1], [0, -1]]
+  constructor(allships, oppenetBoard) {
+    super();
+    this.remainingPlacesArray = []
+    this.remainingPlaces = new Map(Array.from({ length: 100 }, (_, i) => {
+      this.remainingPlacesArray.push(i)
+      return [i,i]
+    }))
+    this.oppenetBoard = oppenetBoard
+    
+    this.boardLength = Gameboard.BOARD_SIZE
+    this.attacks = new Set()
+    this.lastShot = null
   }
 
   placeAllShips(allships) {
     let index = 0;
     const allShipsLength = allships.length;
-    const boardSize = Gameboard.BOARD_SIZE + 1;
+    const boardSize = this.boardLength + 1;
     while (index < allShipsLength) {
       const randomX = Math.floor(Math.random() * boardSize);
       const randomY = Math.floor(Math.random() * boardSize);
@@ -130,6 +139,94 @@ class Computer extends Player {
       }
     }
   }
+
+
+
+  playTurn() {
+
+    let key
+
+    const attacksValues = [...this.attacks.keys()]
+    if (attacksValues.length > 0) {
+      key = attacksValues.pop()
+      this.attacks.delete(key)
+    }
+    else {
+      this.lastShot = null
+      const randomIndex = this.getRandomValue(this.remainingPlacesArray.length)
+      
+      key = this.remainingPlacesArray[randomIndex]
+    }
+
+
+
+
+    const index = this.remainingPlaces.get(key)
+    const lastElement = this.remainingPlacesArray.at(-1);
+    this.remainingPlacesArray[index] = lastElement
+    
+    this.remainingPlaces.set(lastElement, index)
+    this.remainingPlaces.delete(key)   
+
+    this.remainingPlacesArray.pop()
+
+
+    const [x, y] = this.generateCords(key)
+    
+    if (this.oppenetBoard[x][y]) {
+      this.generateAdjanceCords(x,y)
+      this.lastShot = [x,y]
+    }
+
+
+    return {x,y}
+  }
+
+  getRandomValue(max) {
+    return Math.floor(Math.random() * max);
+  }
+
+  generateCords(number) {
+    return [Math.floor(number / this.boardLength),number % this.boardLength]
+  }
+
+
+  generateAdjanceCords(x, y) {
+
+    let newX
+    let newY
+    if (this.lastShot) {
+      newX = this.lastShot[0] - x;
+      newY = this.lastShot[1] - y;
+    }
+
+    for (let index = 1; index < 5; index++) {
+      if (this.lastShot) {
+        this.addToAttackArray(newX * index + x, newY * index + y)
+        this.addToAttackArray(newX * index * -1 + x, newY * index * -1 + y)
+      }
+      else {
+        const variation = Computer.variations[index - 1];
+        this.addToAttackArray(variation[0] + x, variation[1] + y)
+      }
+    }
+  }
+
+
+  addToAttackArray(x,y) {
+
+      const key = x * 10 + y;
+      if (
+        x < 10 &&
+        y < 10 &&
+        x >= 0 &&
+        y >= 0 &&
+        this.remainingPlaces.has(key)
+      ) {
+        this.attacks.add(key);
+      }
+  }
+
 }
 
 export { Ship, Gameboard, Player, Computer };
