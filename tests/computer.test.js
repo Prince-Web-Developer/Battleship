@@ -13,6 +13,7 @@ beforeAll(() => {
   computer = new Computer([createShipObject("tanker",5,3,3)], player.gameboard.gameboard);
 });
 
+
 describe("play function", () => {
   test("returns value in right format", () => {
     const spy = jest.spyOn(computer, "getRandomValue").mockReturnValueOnce(75);

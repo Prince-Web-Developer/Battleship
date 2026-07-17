@@ -1,3 +1,5 @@
+import { ships } from "./shipImages.js";
+
 class Ship {
   #hits;
   constructor(name, length) {
@@ -28,8 +30,8 @@ class Gameboard {
   placeShipe(name, length, x, y, turn = false) {
     if (
       this.checkCord(x, y) ||
-      (turn && length + y > Gameboard.BOARD_SIZE) ||
-      (!turn && length + x > Gameboard.BOARD_SIZE)
+      (turn && length + y >= Gameboard.BOARD_SIZE) ||
+      (!turn && length + x >= Gameboard.BOARD_SIZE)
     )
       throw new Error("invalid position");
     if (length > Gameboard.BOARD_SIZE || length <= 0)
@@ -68,7 +70,12 @@ class Gameboard {
   }
 
   checkCord(x, y) {
-    if (x < 0 || y < 0 || x >= Gameboard.BOARD_SIZE || y >= Gameboard.BOARD_SIZE)
+    if (
+      x < 0 ||
+      y < 0 ||
+      x >= Gameboard.BOARD_SIZE ||
+      y >= Gameboard.BOARD_SIZE
+    )
       return true;
     return false;
   }
@@ -80,7 +87,7 @@ class Gameboard {
       if (ship.isSunk()) sunkShips.push(ship.name);
     });
 
-    const gameOver = sunkShips.length >= this.ships.length;
+    const gameOver = sunkShips.length >= this.ships.length && this.ships.length > 0;
 
     return {
       sunkShips,
@@ -90,7 +97,8 @@ class Gameboard {
 }
 
 class Player {
-  constructor() {
+  constructor(name) {
+    this.name = name;
     this.gameboard = new Gameboard();
   }
 
@@ -106,18 +114,25 @@ class Player {
 }
 
 class Computer extends Player {
-  static variations = [[1, 0], [-1, 0], [0, 1], [0, -1]]
-  constructor(allships) {
-    super();
-    this.remainingPlacesArray = []
-    this.remainingPlaces = new Map(Array.from({ length: 100 }, (_, i) => {
-      this.remainingPlacesArray.push(i)
-      return [i,i]
-    }))
-    
-    this.boardLength = Gameboard.BOARD_SIZE
-    this.attacks = new Set()
-    this.lastShot = null
+  static variations = [
+    [1, 0],
+    [-1, 0],
+    [0, 1],
+    [0, -1],
+  ];
+  constructor(name, allships) {
+    super(name);
+    this.remainingPlacesArray = [];
+    this.remainingPlaces = new Map(
+      Array.from({ length: 100 }, (_, i) => {
+        this.remainingPlacesArray.push(i);
+        return [i, i];
+      }),
+    );
+
+    this.boardLength = Gameboard.BOARD_SIZE;
+    this.attacks = new Set();
+    this.lastShot = null;
     this.placeAllShips(allships);
   }
 
@@ -139,46 +154,37 @@ class Computer extends Player {
     }
   }
 
-
-
   playTurn(oppenetBoard) {
+    let key;
 
-    let key
-
-    const attacksValues = [...this.attacks.keys()]
+    const attacksValues = [...this.attacks.keys()];
     if (attacksValues.length > 0) {
-      key = attacksValues.pop()
-      this.attacks.delete(key)
+      key = attacksValues.pop();
+      this.attacks.delete(key);
+    } else {
+      this.lastShot = null;
+      const randomIndex = this.getRandomValue(this.remainingPlacesArray.length);
+
+      key = this.remainingPlacesArray[randomIndex];
     }
-    else {
-      this.lastShot = null
-      const randomIndex = this.getRandomValue(this.remainingPlacesArray.length)
-      
-      key = this.remainingPlacesArray[randomIndex]
-    }
 
-
-
-
-    const index = this.remainingPlaces.get(key)
+    const index = this.remainingPlaces.get(key);
     const lastElement = this.remainingPlacesArray.at(-1);
-    this.remainingPlacesArray[index] = lastElement
-    
-    this.remainingPlaces.set(lastElement, index)
-    this.remainingPlaces.delete(key)   
+    this.remainingPlacesArray[index] = lastElement;
 
-    this.remainingPlacesArray.pop()
+    this.remainingPlaces.set(lastElement, index);
+    this.remainingPlaces.delete(key);
 
+    this.remainingPlacesArray.pop();
 
-    const [x, y] = this.generateCords(key)
-    
+    const [x, y] = this.generateCords(key);
+
     if (oppenetBoard[x][y]) {
-      this.generateAdjanceCords(x,y)
-      this.lastShot = [x,y]
+      this.generateAdjanceCords(x, y);
+      this.lastShot = [x, y];
     }
 
-
-    return {x,y}
+    return { x, y };
   }
 
   getRandomValue(max) {
@@ -186,14 +192,12 @@ class Computer extends Player {
   }
 
   generateCords(number) {
-    return [Math.floor(number / this.boardLength),number % this.boardLength]
+    return [Math.floor(number / this.boardLength), number % this.boardLength];
   }
 
-
   generateAdjanceCords(x, y) {
-
-    let newX
-    let newY
+    let newX;
+    let newY;
     if (this.lastShot) {
       newX = this.lastShot[0] - x;
       newY = this.lastShot[1] - y;
@@ -201,31 +205,63 @@ class Computer extends Player {
 
     for (let index = 1; index < 5; index++) {
       if (this.lastShot) {
-        this.addToAttackArray(newX * index + x, newY * index + y)
-        this.addToAttackArray(newX * index * -1 + x, newY * index * -1 + y)
-      }
-      else {
+        this.addToAttackArray(newX * index + x, newY * index + y);
+        this.addToAttackArray(newX * index * -1 + x, newY * index * -1 + y);
+      } else {
         const variation = Computer.variations[index - 1];
-        this.addToAttackArray(variation[0] + x, variation[1] + y)
+        this.addToAttackArray(variation[0] + x, variation[1] + y);
       }
     }
   }
 
-
-  addToAttackArray(x,y) {
-
-      const key = x * 10 + y;
-      if (
-        x < 10 &&
-        y < 10 &&
-        x >= 0 &&
-        y >= 0 &&
-        this.remainingPlaces.has(key)
-      ) {
-        this.attacks.add(key);
-      }
+  addToAttackArray(x, y) {
+    const key = x * 10 + y;
+    if (x < 10 && y < 10 && x >= 0 && y >= 0 && this.remainingPlaces.has(key)) {
+      this.attacks.add(key);
+    }
   }
-
 }
 
-export { Ship, Gameboard, Player, Computer };
+class GameManager {
+  constructor(gameMode) {
+    this.shipsCopy = [...ships];
+    this.shipsCopyLength = this.shipsCopy.length;
+    this.player1 = new Player("player1");
+    this.player2 =
+      gameMode === "two"
+        ? new Player("player2")
+        : new Computer("computer", this.shipsCopy);
+    this.start = false;
+    this.activePlayer = this.player1;
+  }
+
+  #changeActivePlayer() {
+    this.activePlayer =
+      this.activePlayer === this.player1
+        ? this.player2
+        : this.player1;
+  }
+
+  receiveAttack(x, y) {
+    if (this.shipsCopyLength > 0) throw new Error("place all ships");
+    const playerRecevingAttack = this.activePlayer === this.player1 ? this.player2 : this.player1;
+    playerRecevingAttack.receiveAttack(x,y)
+    this.#changeActivePlayer();
+  }
+
+  placeShipe(name, length, x, y, turn = false) {
+    this.activePlayer.placeShipe(name, length, x, y, turn);
+    this.shipsCopyLength--;
+  }
+
+  isGameOver() {
+    const winner = this.activePlayer.sunkShips().gameOver
+      ? this.activePlayer === this.player1
+        ? this.player2.name
+        : this.player1.name
+      : null;
+    return winner;
+  }
+}
+
+export { Ship, Gameboard, Player, Computer, GameManager };

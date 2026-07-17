@@ -299,8 +299,9 @@ li{
   min-height: 100vh;
   padding: 20px;
   display: flex;
-  justify-content: center;
-
+  flex-direction: column;
+  gap: 40px;
+  align-items: center;
   .container{
     display: flex;
     width: 100%;
@@ -328,11 +329,13 @@ li{
     min-width: 280px;
     display: grid;
     grid-template-columns: repeat(10,1fr);
+    cursor: pointer;
   }
 
   .board > *{
     aspect-ratio: 1;
     border: 1px solid black;
+  
   }
 
 
@@ -345,14 +348,48 @@ li{
     transition: height 0.5s;
   }
 
+  
+
   .boardInner{
     display: flex;
     flex-wrap: wrap;
-    gap: 30px;
+    gap: 40px;
+    padding: 10px;
   }
+
+  .ship{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .ship > p{
+    font-style: italic;
+    font-weight: bold;
+  }
+
+  .ship > img{
+    cursor: grabbing;
+  }
+
+  
+
 
   .height40{
     height:40px;
+  }
+
+
+  .invisible{
+    position: static;
+    max-height: 0px;
+    overflow: hidden;
+  }
+
+  .normalPosition{
+    position: static !important;
+    top: 0 !important;
+    left: 0 !important;
   }
 
   .boardContainer{
@@ -375,8 +412,43 @@ li{
     cursor: pointer;
   }
 
+
+  
+
+
+  .turn{
+    font-family: "Bowlby One SC", sans-serif;
+  }
+  .errors{
+    position: absolute;
+    pointer-events: none;
+    top: 50%;
+    left: 50%;
+    opacity: 0;
+    transform: translate(-50%, -50%);
+    color:red;
+    font-family: "Bowlby One SC", sans-serif;
+    
+  }
+
+
+
+  .errorAnimation{
+    animation: error 2s ease-in forwards;
+  }
 }
 
+@keyframes error {
+    0%{
+      transform: translateY(0) translate(-50%, -50%);
+      opacity: 1;
+    }
+
+    100%{
+      transform: translateY(-200px) translate(-50%, -50%);
+      opacity: 0;
+    }
+  }
 
 @media screen and (max-width:600px) {
   #help{
