@@ -26,7 +26,7 @@ test("gameboard can place multiple ships", () => {
 
 test("gameboard can't place ship on location where existing ship is there", () => {
   expect(() => gameBoard.placeShipe("submarie", 4, 4, 3)).toThrow(
-    "submarie can't be placed as tanker is there.",
+    "submarie can't be placed as ship is there.",
   );
 });
 

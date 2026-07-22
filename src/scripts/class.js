@@ -1,4 +1,10 @@
-import { ships } from "./shipImages.js";
+const ships = [
+  { name: "carrier", length: 5 },
+  { name: "battleship", length: 4 },
+  { name: "submarine", length: 3 },
+  { name: "destroyer", length: 3 },
+  { name: "patrol", length: 2 },
+];
 
 class Ship {
   #hits;
@@ -27,32 +33,33 @@ class Gameboard {
     this.attackedPlaces = new Set();
   }
 
-  placeShipe(name, length, x, y, turn = false) {
+  placeShipe(name, length, x, y, turn = false, place = true) {
     if (
       this.checkCord(x, y) ||
-      (turn && length + y >= Gameboard.BOARD_SIZE) ||
-      (!turn && length + x >= Gameboard.BOARD_SIZE)
+      (turn && length + x > Gameboard.BOARD_SIZE) ||
+      (!turn && length + y > Gameboard.BOARD_SIZE)
     )
       throw new Error("invalid position");
     if (length > Gameboard.BOARD_SIZE || length <= 0)
       throw new Error("inappropriate length");
 
-    const newShipCords = [];
+    if (this.checkShipCordsAndMark(length, x, y, turn))
+      throw new Error(`${name} can't be placed as ship is there.`);
 
-    for (let index = 0; index < length; index++) {
-      const cords = !turn ? [x + index, y] : [x, y + index];
-      const cell = this.gameboard[cords[0]][cords[1]];
-      if (cell instanceof Ship)
-        throw new Error(`${name} can't be placed as ${cell.name} is there.`);
-      newShipCords.push(cords);
+    if (place) {
+      const newShip = new Ship(name, length);
+      this.checkShipCordsAndMark(length, x, y, turn, newShip);
+      this.ships.push(newShip);
     }
+  }
 
-    const newShip = new Ship(name, length);
-
-    newShipCords.forEach(
-      (cord) => (this.gameboard[cord[0]][cord[1]] = newShip),
-    );
-    this.ships.push(newShip);
+  checkShipCordsAndMark(length, x, y, turn, ship = false) {
+    for (let index = 0; index < length; index++) {
+      const cords = !turn ? [x, y + index] : [x + index, y];
+      const cell = this.gameboard[cords[0]][cords[1]];
+      if (ship) this.gameboard[cords[0]][cords[1]] = ship;
+      else if (cell instanceof Ship) return true;
+    }
   }
 
   receiveAttack(x, y) {
@@ -87,7 +94,8 @@ class Gameboard {
       if (ship.isSunk()) sunkShips.push(ship.name);
     });
 
-    const gameOver = sunkShips.length >= this.ships.length && this.ships.length > 0;
+    const gameOver =
+      sunkShips.length >= this.ships.length && this.ships.length > 0;
 
     return {
       sunkShips,
@@ -237,15 +245,14 @@ class GameManager {
 
   #changeActivePlayer() {
     this.activePlayer =
-      this.activePlayer === this.player1
-        ? this.player2
-        : this.player1;
+      this.activePlayer === this.player1 ? this.player2 : this.player1;
   }
 
   receiveAttack(x, y) {
     if (this.shipsCopyLength > 0) throw new Error("place all ships");
-    const playerRecevingAttack = this.activePlayer === this.player1 ? this.player2 : this.player1;
-    playerRecevingAttack.receiveAttack(x,y)
+    const playerRecevingAttack =
+      this.activePlayer === this.player1 ? this.player2 : this.player1;
+    playerRecevingAttack.receiveAttack(x, y);
     this.#changeActivePlayer();
   }
 

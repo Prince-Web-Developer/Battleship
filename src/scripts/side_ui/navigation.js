@@ -1,9 +1,9 @@
-import audio from "/asssets/sounds/universfield-computer-mouse-click-352734.mp3";
-import { shipsBoard } from "../game_ui.js";
+import { mouseClickAudio } from "../sound.js";
+import { shipsBoard } from "./shipBoard.js";
 import { scheduleNextShip } from "./ship.js";
+import { sounds } from "../sound.js";
 
-const mouseClickAudio = new Audio(audio);
-mouseClickAudio.load();
+
 
 const screens = document.querySelectorAll(".screen");
 
@@ -12,7 +12,7 @@ history.replaceState("intro", "", document.location.href);
 
 
 const callBacks = {
-    "game": shipsBoard.createShips,
+    "game": shipsBoard.reset.bind(shipsBoard),
     "play": scheduleNextShip
 }
 
@@ -20,7 +20,7 @@ const callBacks = {
 const buttons = document.querySelectorAll(".navigationButton");
 buttons.forEach((button) =>
     button.addEventListener("click", async (e) => {
-        mouseClickAudio.play().catch((e) => console.log(e))
+       sounds["mouse"].play().catch((e) => console.log(e))
         setTimeout(() => {
             const screen = e.target.dataset.screenId
             history.pushState(screen, "", screen);

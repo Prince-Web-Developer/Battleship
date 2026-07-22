@@ -1,5 +1,6 @@
-import { ships } from "./shipImages.js";
 import { GameManager, Gameboard } from "./class.js";
+import { shipsBoard } from "./side_ui/shipBoard.js";
+import { sounds } from "./sound.js";
 
 class gameUi {
   static player1Board = document.querySelector(".b1");
@@ -31,63 +32,92 @@ class gameUi {
       helperUiMethods.addEventListener(board, "click", (e) =>
         this.attack(e, board),
       );
-
-      helperUiMethods.addEventListener(document, "pointerup", (e) => {
-        const cell = e.target
-        if (cell.classList.contains("cell")) {
-          const activateShip = shipsUi.activateShip
-          if (!activateShip || this.checkIfWrongBoard(board,true)) return
-          if (this.isWithinBounds(activateShip, board)) {
-            const shipDataset = activateShip.dataset
-            const cellDataset = cell.dataset
-            this.gameManager.placeShipe(shipDataset.name, shipDataset.holes, cellDataset.x, cellDataset.y)
-            shipsUi.markShip()
-            shipsUi.reset(true)
-            return
-          }
-        }
-        shipsUi.reset(false)
-      },() => shipsUi.reset(false))
     });
+
+
+    helperUiMethods.addEventListener(document, "customMousUp", (e) => {
+      const details = e.detail
+        const ship = details.activeShip;
+        const board = this.gameManager.activePlayer === this.gameManager.player1 ? gameUi.player1Board : gameUi.player2Board
+
+        if (!ship) return;
+
+        let target = details.target;
+        if (!target){
+          const x = ship.dataset.x
+          const y = ship.dataset.y
+          if (!x || !y) return
+          target = board.querySelector(`[data-x="${x}"][data-y="${y}"]`)
+        }
+        const cords = target.dataset;
+        const shipDataset = ship.dataset
+        const turn = shipDataset.turn === "1" ? true : false
+
+        const place = details.place
+        
+
+        
+        if (
+          !board.contains(target)
+        ) {
+          shipsBoard.resetShip(ship);
+          sounds["no"].play().catch((e) => console.log(e))
+          return;
+        }
+        
+        this.gameManager.activePlayer.gameboard.placeShipe(shipDataset.name,+shipDataset.holes,+cords.x,+cords.y,turn,place)
+
+        if (place) {
+          sounds["place"].play().catch((e) => console.log(e))
+          this.updateScreen()
+          return
+        }
+         const data = {
+          "ship": ship,
+          "x": cords.x,
+          "y": cords.y
+         }
+
+        const shipPlaced = new CustomEvent("placeShip",{
+          detail: data
+        })
+
+        document.dispatchEvent(shipPlaced)
+        this.adjustShip(target, ship,turn);
+      },(e) => {
+        const ship = e.detail.activeShip
+        shipsBoard.resetShip(ship)
+      });
   }
 
+  adjustShip(cell, ship,turn) {
+    const shipBounds = ship.getBoundingClientRect()
+    const cellBounds = cell.getBoundingClientRect()
+    const close = turn ? "top" : "left"
+    const center = turn ? "left" : "top"
 
-  isWithinBounds(element, container) {
-  const rect = element.getBoundingClientRect();
-  const parentRect = container.getBoundingClientRect();
-
-  return (
-    rect.top >= parentRect.top &&
-    rect.bottom <= parentRect.bottom &&
-    rect.left >= parentRect.left &&
-    rect.right <= parentRect.right
-  );
-}
+    const centerDistance = `${(cellBounds[center] + (turn ? cellBounds.width : window.scrollY)) + (turn ? (cellBounds.width - shipBounds.width) : (cellBounds.height - shipBounds.height))/2}px`
+    ship.style[close] = `${cellBounds[close] + (turn ? window.scrollY : 0)}px`
+    ship.style[center] = centerDistance
+  }
 
 
   attack(e, board) {
     const target = e.target;
     if (!target.classList.contains("cell")) return;
-    if (this.checkIfWrongBoard(board,false)) return;
+    if (!this.checkIfWrongBoard(board, false)) return;
     const dataset = target.dataset;
     this.gameManager.receiveAttack(dataset.x, dataset.y);
     this.updateScreen();
   }
 
   checkIfWrongBoard(board, sameBoard) {
-    let b1 = 'b1'
-    let b2 = 'b2'
-    if (sameBoard) {
-      b1 = 'b2'
-      b2 = 'b1'
-    }
-    if (
-      (this.gameManager.activePlayer === this.gameManager.player1 &&
-        board.classList.contains(b1)) ||
-      (this.gameManager.activePlayer === this.gameManager.player2 &&
-        board.classList.contains(b2))
-    )
-      return true;
+    let b1 = sameBoard ? "b1" : "b2";
+    let b2 = sameBoard ? "b2" : "b1";
+    
+    if (this.gameManager.activePlayer === this.gameManager.player1 &&
+        board.classList.contains(b1) || this.gameManager.activePlayer === this.gameManager.player2 &&
+        board.classList.contains(b2) ) {return board}
   }
 
   createBoard(player, gameBoardUi) {
@@ -119,12 +149,12 @@ class gameUi {
 class helperUiMethods {
   static errors = document.querySelector(".errors");
 
-  static addEventListener(element, type, callback, errCallback = () => {}) {
+  static addEventListener(element, type, callback, errCallback = (e) => {}) {
     element.addEventListener(type, (e) => {
       try {
         callback(e);
       } catch (error) {
-        errCallback();
+        errCallback(e);
         helperUiMethods.showError(error);
       }
     });
@@ -142,81 +172,8 @@ class helperUiMethods {
   }
 }
 
-class shipsUi {
-  static shipsBoard = document.querySelector(".shipBoard");
-  static shipsBoardBtn = document.querySelector(".downArrow");
-  static innerBoard = document.querySelector(".boardInner");
-  static activateShip = null;
-
-  constructor() {
-    shipsUi.loadEventListener()
-  }
-
-  static loadEventListener() {
-    shipsUi.shipsBoardBtn.addEventListener("click", () =>
-      shipsUi.shipsBoard.classList.toggle("height40"),
-    );
-  }
-
-  createShips() {
-    const fragment = document.createDocumentFragment();
-    ships.forEach((ship) => {
-      const cellWidth = document.querySelector(".cell").clientWidth;
-      const shipContainer = document.createElement("div");
-      shipContainer.classList.add("ship");
-      const shipName = document.createElement("h3");
-      shipName.innerText = ship.name;
-      const shipLength = ship.length;
-      const shipImg = ship.img;
-
-      shipImg.style.width = `${cellWidth * shipLength}px`;
-      shipImg.style.height = `${cellWidth}px`;
-      shipImg.dataset.holes = shipLength;
-      shipImg.dataset.name = ship.name;
-      helperUiMethods.addEventListener(shipImg, "pointerdown", shipsUi.selectShip);
-      const holes = document.createElement("p");
-      holes.innerText = `${shipLength} holes`;
-
-      shipContainer.append(shipName, shipImg, holes);
-      fragment.append(shipContainer);
-    });
-
-    shipsUi.innerBoard.append(fragment);
-  }
-
-  static selectShip(e) {
-    const ship = e.target;
-    if (ship.dataset.mark) return;
-    shipsUi.activateShip = ship;
-    shipsUi.activateShip.classList.remove("normalPosition")
-    ship.style.position = "fixed";
-    shipsUi.shipsBoard.classList.add("invisible");
-    helperUiMethods.addEventListener(document, "pointermove", shipsUi.moveShip);
-  }
-
-  static markShip() {
-    shipsUi.activateShip.dataset.mark = 1
-  }
-
-  static moveShip(e) {
-    if (!shipsUi.activateShip) return;
-    shipsUi.activateShip.style.top = `${e.clientY - 10}px`;
-    shipsUi.activateShip.style.left = `${e.clientX - 10}px`;
-  }
-
-  static reset(shipPlaced) {
-    if (!shipsUi.activateShip) return
-    shipsUi.shipsBoard.classList.remove("invisible")
-    if (!shipPlaced) shipsUi.activateShip.classList.add("normalPosition");
-    document.removeEventListener("pointermove",shipsUi.moveShip)
-  }
-}
-
-
-
 helperUiMethods.loadEventListener();
 
-const shipsBoard = new shipsUi();
 // to laod ships and on and off ship Board
 
-export { gameUi, shipsBoard };
+export { gameUi };
