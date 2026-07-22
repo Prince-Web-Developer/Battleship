@@ -1,6 +1,7 @@
 import { GameManager, Gameboard } from "./class.js";
 import { shipsBoard } from "./side_ui/shipBoard.js";
 import { sounds } from "./sound.js";
+import { helperUiMethods } from "./helper.js";
 
 class gameUi {
   static player1Board = document.querySelector(".b1");
@@ -21,103 +22,126 @@ class gameUi {
     this.createBoard(this.gameManager.player1, gameUi.player1Board);
     this.createBoard(this.gameManager.player2, gameUi.player2Board);
     if (this.gameManager.start)
-      gameUi.turn.innerText = `${this.gameManager.activePlayer.name} turns`;
+      gameUi.turn.innerText = `${this.activePlayer().name} turns`;
     else gameUi.turn.innerText = "Place your ships";
   }
 
   loadEventListener() {
-    const boards = document.querySelectorAll(".board");
+    helperUiMethods.addEventListener(gameUi.player1Board, "click", this.attack);
+    helperUiMethods.addEventListener(gameUi.player2Board, "click", this.attack);
 
-    boards.forEach((board) => {
-      helperUiMethods.addEventListener(board, "click", (e) =>
-        this.attack(e, board),
-      );
-    });
-
-
-    helperUiMethods.addEventListener(document, "customMousUp", (e) => {
-      const details = e.detail
-        const ship = details.activeShip;
-        const board = this.gameManager.activePlayer === this.gameManager.player1 ? gameUi.player1Board : gameUi.player2Board
-
-        if (!ship) return;
-
-        let target = details.target;
-        if (!target){
-          const x = ship.dataset.x
-          const y = ship.dataset.y
-          if (!x || !y) return
-          target = board.querySelector(`[data-x="${x}"][data-y="${y}"]`)
-        }
-        const cords = target.dataset;
-        const shipDataset = ship.dataset
-        const turn = shipDataset.turn === "1" ? true : false
-
-        const place = details.place
-        
-
-        
-        if (
-          !board.contains(target)
-        ) {
-          shipsBoard.resetShip(ship);
-          sounds["no"]()
-          return;
-        }
-        
-        this.gameManager.activePlayer.gameboard.placeShipe(shipDataset.name,+shipDataset.holes,+cords.x,+cords.y,turn,place)
-
-        if (place) {
-          sounds["place"]()
-          this.updateScreen()
-          return
-        }
-         const data = {
-          "ship": ship,
-          "x": cords.x,
-          "y": cords.y
-         }
-
-        const shipPlaced = new CustomEvent("placeShip",{
-          detail: data
-        })
-
-        document.dispatchEvent(shipPlaced)
-        this.adjustShip(target, ship,turn);
-      },(e) => {
+    helperUiMethods.addEventListener(
+      document,
+      "customMousUp",
+      this.placeManager,
+      (e) => {
         const ship = e.detail.activeShip
-        shipsBoard.resetShip(ship)
-      });
+        if(ship) shipsBoard.resetShip(ship)
+      },
+    );
   }
 
-  adjustShip(cell, ship,turn) {
-    const shipBounds = ship.getBoundingClientRect()
-    const cellBounds = cell.getBoundingClientRect()
-    const close = turn ? "top" : "left"
-    const center = turn ? "left" : "top"
+ placeManager = (e) => {
+  const { activeShip: ship, target, place } = e.detail;
+  if (!ship) return;
 
-    const centerDistance = `${(cellBounds[center] + (turn ? cellBounds.width : window.scrollY)) + (turn ? (cellBounds.width - shipBounds.width) : (cellBounds.height - shipBounds.height))/2}px`
-    ship.style[close] = `${cellBounds[close] + (turn ? window.scrollY : 0)}px`
-    ship.style[center] = centerDistance
+  const board = this.giveActiveBoard();
+  const cell = this.getTargetCell(board, ship, target);
+
+  if (!cell) return;
+
+  if (!this.isTargetOnBoard(board, cell, ship)) return;
+
+  const turn = ship.dataset.turn === "1";
+
+  this.placeShipOnBoard(ship, cell, turn, place);
+
+  if (place) {
+    this.finishPlacement();
+    return;
   }
 
+  this.previewPlacement(ship, cell, turn);
+};
 
-  attack(e, board) {
+getTargetCell(board, ship, target) {
+  if (target) return target;
+
+  const { x, y } = ship.dataset;
+  if (!x || !y) return null;
+
+  return board.querySelector(`[data-x="${x}"][data-y="${y}"]`);
+}
+
+isTargetOnBoard(board, target, ship) {
+  if (board.contains(target)) return true;
+
+  shipsBoard.resetShip(ship);
+  sounds.no();
+  return false;
+}
+
+placeShipOnBoard(ship, target, turn, place) {
+  const { name, holes } = ship.dataset;
+  const { x, y } = target.dataset;
+
+  this.activePlayer().gameboard.placeShipe(
+    name,
+    Number(holes),
+    Number(x),
+    Number(y),
+    turn,
+    place
+  );
+}
+
+finishPlacement() {
+  sounds.place();
+  this.updateScreen();
+}
+
+previewPlacement(ship, target, turn) {
+  document.dispatchEvent(
+    new CustomEvent("placeShip", {
+      detail: {
+        ship,
+        x: target.dataset.x,
+        y: target.dataset.y,
+      },
+    })
+  );
+
+  this.adjustShip(target, ship, turn);
+}
+
+  adjustShip(cell, ship, turn) {
+    const shipBounds = ship.getBoundingClientRect();
+    const cellBounds = cell.getBoundingClientRect();
+    const close = turn ? "top" : "left";
+    const center = turn ? "left" : "top";
+
+    const centerDistance = `${cellBounds[center] + (turn ? cellBounds.width : window.scrollY) + (turn ? cellBounds.width - shipBounds.width : cellBounds.height - shipBounds.height) / 2}px`;
+    ship.style[close] = `${cellBounds[close] + (turn ? window.scrollY : 0)}px`;
+    ship.style[center] = centerDistance;
+  }
+
+  attack = (e) => {
     const target = e.target;
     if (!target.classList.contains("cell")) return;
-    if (!this.checkIfWrongBoard(board, false)) return;
+    if (this.giveActiveBoard().contains(target)) return;
     const dataset = target.dataset;
     this.gameManager.receiveAttack(dataset.x, dataset.y);
     this.updateScreen();
+  };
+
+  giveActiveBoard() {
+    return this.activePlayer() === this.gameManager.player1
+      ? gameUi.player1Board
+      : gameUi.player2Board;
   }
 
-  checkIfWrongBoard(board, sameBoard) {
-    let b1 = sameBoard ? "b1" : "b2";
-    let b2 = sameBoard ? "b2" : "b1";
-    
-    if (this.gameManager.activePlayer === this.gameManager.player1 &&
-        board.classList.contains(b1) || this.gameManager.activePlayer === this.gameManager.player2 &&
-        board.classList.contains(b2) ) {return board}
+  activePlayer() {
+    return this.gameManager.activePlayer;
   }
 
   createBoard(player, gameBoardUi) {
@@ -145,34 +169,6 @@ class gameUi {
     gameBoardUi.append(fragment);
   }
 }
-
-class helperUiMethods {
-  static errors = document.querySelector(".errors");
-
-  static addEventListener(element, type, callback, errCallback = (e) => {}) {
-    element.addEventListener(type, (e) => {
-      try {
-        callback(e);
-      } catch (error) {
-        errCallback(e);
-        helperUiMethods.showError(error);
-      }
-    });
-  }
-
-  static loadEventListener() {
-    helperUiMethods.errors.addEventListener("animationend", () => {
-      helperUiMethods.errors.classList.remove("errorAnimation");
-    });
-  }
-
-  static showError(error) {
-    helperUiMethods.errors.innerText = error.message;
-    helperUiMethods.errors.classList.add("errorAnimation");
-  }
-}
-
-helperUiMethods.loadEventListener();
 
 // to laod ships and on and off ship Board
 
