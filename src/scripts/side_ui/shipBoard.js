@@ -155,7 +155,7 @@ class shipsUi {
     return
    }
    target.append(this.buttonContainer)
-   sounds['select'].play().catch((e) => console.log(e))
+   sounds['select']()
   }
 
 

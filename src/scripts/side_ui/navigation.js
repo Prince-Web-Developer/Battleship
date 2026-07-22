@@ -20,7 +20,7 @@ const callBacks = {
 const buttons = document.querySelectorAll(".navigationButton");
 buttons.forEach((button) =>
     button.addEventListener("click", async (e) => {
-       sounds["mouse"].play().catch((e) => console.log(e))
+       sounds["mouse"]()
         setTimeout(() => {
             const screen = e.target.dataset.screenId
             history.pushState(screen, "", screen);

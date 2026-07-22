@@ -5,26 +5,28 @@ import select from "/asssets/sounds/select.mp3"
 import place from "/asssets/sounds/place.mp3"
 
 
-const mouseClickAudio = new Audio(mouseClick);
-mouseClickAudio.load();
 
 
-const noAudio = new Audio(no)
-noAudio.load()
+const audioFiles = [{name:"mouse",audio:mouseClick},{name:"no",audio:no},{name:"select",audio:select},{name:"place",audio:place}]
 
-const selectAudio = new Audio(select)
-selectAudio.load()
-
-
-const placeAudio = new Audio(place)
-placeAudio.load()
 
 
 const sounds = {
-    "mouse": mouseClickAudio,
-    "no":noAudio,
-    "select":selectAudio,
-    "place":placeAudio
+    
 }
+
+
+
+audioFiles.forEach((audio) => {
+    const sound = new Audio(audio.audio)
+    sound.load()
+    sounds[audio.name] = () => {
+        sound.play().catch((e) => console.log(e))
+    } 
+})
+
+
+
+
 
 export {sounds}

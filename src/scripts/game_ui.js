@@ -61,14 +61,14 @@ class gameUi {
           !board.contains(target)
         ) {
           shipsBoard.resetShip(ship);
-          sounds["no"].play().catch((e) => console.log(e))
+          sounds["no"]()
           return;
         }
         
         this.gameManager.activePlayer.gameboard.placeShipe(shipDataset.name,+shipDataset.holes,+cords.x,+cords.y,turn,place)
 
         if (place) {
-          sounds["place"].play().catch((e) => console.log(e))
+          sounds["place"]()
           this.updateScreen()
           return
         }
