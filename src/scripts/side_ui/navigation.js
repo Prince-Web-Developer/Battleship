@@ -12,7 +12,7 @@ history.replaceState("intro", "", document.location.href);
 
 
 const callBacks = {
-    "game": shipsBoard.reset.bind(shipsBoard),
+    "game": shipsBoard.init.bind(shipsBoard),
     "play": scheduleNextShip
 }
 

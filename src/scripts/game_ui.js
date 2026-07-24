@@ -36,7 +36,10 @@ class gameUi {
       this.placeManager,
       (e) => {
         const ship = e.detail.activeShip
-        if(ship) shipsBoard.resetShip(ship)
+        if(ship) {
+          shipsBoard.resetShip(ship)
+          sounds.no();
+        }
       },
     );
   }
@@ -50,7 +53,9 @@ class gameUi {
 
   if (!cell) return;
 
-  if (!this.isTargetOnBoard(board, cell, ship)) return;
+  if (!this.isTargetOnBoard(board, cell)) {
+    throw new Error("No")
+  };
 
   const turn = ship.dataset.turn === "1";
 
@@ -73,11 +78,10 @@ getTargetCell(board, ship, target) {
   return board.querySelector(`[data-x="${x}"][data-y="${y}"]`);
 }
 
-isTargetOnBoard(board, target, ship) {
+isTargetOnBoard(board, target) {
   if (board.contains(target)) return true;
 
-  shipsBoard.resetShip(ship);
-  sounds.no();
+  
   return false;
 }
 

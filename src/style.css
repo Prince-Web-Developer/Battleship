@@ -482,6 +482,10 @@ li{
   .errorAnimation{
     animation: error 2s ease-in forwards;
   }
+
+  .none{
+    display: none;
+  }
 }
 
 
