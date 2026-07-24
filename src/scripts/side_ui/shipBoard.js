@@ -47,8 +47,7 @@ class ShipsUi {
 
   loadEventListner() {
     document.addEventListener("placeShip", this.markShip);
-    document.addEventListener("mouseup", this.releaseCustomMouseUpEvent);
-    document.addEventListener("touchend", this.releaseCustomMouseUpEvent);
+    document.addEventListener("pointerup", this.releaseCustomMouseUpEvent);
     this.shipsBoardBtn.addEventListener("click", () =>
       this.shipsBoard.classList.toggle("height40"),
     );
@@ -131,8 +130,7 @@ class ShipsUi {
 
   finishDragging(ship) {
     ship.classList.remove("pointerNone");
-    document.removeEventListener("mousemove", this.mouseCoverFn);
-    document.removeEventListener("touchmove", this.touchCoverfn);
+    document.removeEventListener("pointermove", this.mouseCoverFn);
     this.activeShip = null;
   }
 
@@ -208,13 +206,13 @@ class ShipsUi {
     this.releaseCustomMouseUpEvent({ target: null });
   };
 
-  mouseCoverFn = (e) => this.#changeShipCords(e.pageX, e.pageY);
-  touchCoverfn = (e) =>
-    this.#changeShipCords(e.touches[0].pageX, e.touches[0].pageY);
+  mouseCoverFn = (e) =>{
+    e.preventDefault()
+    this.#changeShipCords(e.pageX, e.pageY);
+  } 
 
   #moveShip() {
-    document.addEventListener("mousemove", this.mouseCoverFn);
-    document.addEventListener("touchmove", this.touchCoverfn);
+    document.addEventListener("pointermove", this.mouseCoverFn);
   }
 
   #changeShipCords(x, y) {

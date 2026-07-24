@@ -413,6 +413,7 @@ li{
     display: flex;
     gap: 20px;
     flex-direction: column;
+    touch-action: none;
   }
 
 
