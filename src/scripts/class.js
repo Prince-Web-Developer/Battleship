@@ -47,6 +47,7 @@ class Gameboard {
       const newShip = new Ship(name, length);
       this.checkShipCordsAndMark(length, x, y, turn, newShip);
       this.ships.push(newShip);
+      return true
     }
   }
 
@@ -259,8 +260,7 @@ class GameManager {
   }
 
   placeShipe(name, length, x, y, turn = false,place) {
-    this.activePlayer.placeShipe(name, length, x, y, turn,place);
-    this.length = this.length - 1;
+    if(this.activePlayer.placeShipe(name, length, x, y, turn,place)) this.length = this.length - 1 
   }
 
   isGameOver() {
