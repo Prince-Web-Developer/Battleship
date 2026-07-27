@@ -13,7 +13,7 @@ test("gameboard is created with all its indexs been array with null value", () =
 });
 
 test("gameboard can place ships", () => {
-  gameBoard.placeShipe("tanker", 4, 3, 3);
+  gameBoard.placeShipe("tanker", 4, 3, 3,true);
   expect(gameBoard.ships[0].name).toBe("tanker");
   expect(gameBoard.ships[0].length).toBe(4);
 });
@@ -31,7 +31,7 @@ test("gameboard can't place ship on location where existing ship is there", () =
 });
 
 test("gameboard can't place ship outside the board", () => {
-  expect(() => gameBoard.placeShipe("submarie", 6, 2, 6, true)).toThrow(
+  expect(() => gameBoard.placeShipe("submarie", 6, 6, 2,true)).toThrow(
     "invalid position",
   );
 });
@@ -53,7 +53,7 @@ test("gameboard receive attack throws error when invalid position is provided", 
 
 test("gameboard receive attack works on ships", () => {
   gameBoard.receiveAttack(1, 1);
-  gameBoard.receiveAttack(1, 2);
+  gameBoard.receiveAttack(2, 1);
   expect(gameBoard.sunkShips().sunkShips[0]).toBe("carrier");
 });
 

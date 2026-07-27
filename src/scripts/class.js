@@ -34,12 +34,9 @@ class Gameboard {
   }
 
   placeShipe(name, length, x, y, turn = false, place = true) {
-    if (
-      this.checkCord(x, y) ||
-      (turn && length + x > Gameboard.BOARD_SIZE) ||
-      (!turn && length + y > Gameboard.BOARD_SIZE)
-    )
-      throw new Error("invalid position");
+    if (this.checkCord(x, y) || (turn && length + x > Gameboard.BOARD_SIZE) || (!turn && length + y > Gameboard.BOARD_SIZE)) throw new Error("invalid position");
+    
+      
     if (length > Gameboard.BOARD_SIZE || length <= 0)
       throw new Error("inappropriate length");
 
@@ -58,7 +55,7 @@ class Gameboard {
       const cords = !turn ? [x, y + index] : [x + index, y];
       const cell = this.gameboard[cords[0]][cords[1]];
       if (ship) this.gameboard[cords[0]][cords[1]] = ship;
-      else if (cell instanceof Ship) return true;
+      if (cell) return true;
     }
   }
 
@@ -232,15 +229,20 @@ class Computer extends Player {
 
 class GameManager {
   constructor(gameMode) {
-    this.shipsCopy = [...ships];
-    this.shipsCopyLength = this.shipsCopy.length;
+
+    this.length = gameMode === "two" ? ships.length * 2 : ships.length
     this.player1 = new Player("player1");
     this.player2 =
       gameMode === "two"
         ? new Player("player2")
-        : new Computer("computer", this.shipsCopy);
-    this.start = false;
+        : new Computer("computer", ships);
     this.activePlayer = this.player1;
+  }
+
+
+
+  get start(){
+    return this.length > 0 ? false : true
   }
 
   #changeActivePlayer() {
@@ -249,7 +251,7 @@ class GameManager {
   }
 
   receiveAttack(x, y) {
-    if (this.shipsCopyLength > 0) throw new Error("place all ships");
+    if (!this.start) throw new Error("place all ships");
     const playerRecevingAttack =
       this.activePlayer === this.player1 ? this.player2 : this.player1;
     playerRecevingAttack.receiveAttack(x, y);
@@ -258,7 +260,7 @@ class GameManager {
 
   placeShipe(name, length, x, y, turn = false) {
     this.activePlayer.placeShipe(name, length, x, y, turn);
-    this.shipsCopyLength--;
+    this.length = this.length - 1;
   }
 
   isGameOver() {
