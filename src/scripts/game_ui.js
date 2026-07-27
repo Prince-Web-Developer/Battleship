@@ -11,6 +11,8 @@ class gameUi {
   constructor(gameMode) {
     this.gameManager = new GameManager(gameMode);
     this.updateScreen();
+    this.createBoard(this.gameManager.player1,gameUi.player1Board)
+    this.createBoard(this.gameManager.player2,gameUi.player2Board)
     this.loadEventListener();
   }
 
@@ -18,11 +20,12 @@ class gameUi {
     const winner = this.gameManager.isGameOver();
     if (winner) {
       console.log(winner);
-    }
-    this.createBoard(this.gameManager.player1, gameUi.player1Board);
-    this.createBoard(this.gameManager.player2, gameUi.player2Board);
-    if (this.gameManager.start)
-      gameUi.turn.innerText = `${this.activePlayer().name} turns`;
+    } 
+    if (this.gameManager.start){
+      const activePlayer = this.activePlayer()
+      gameUi.turn.innerText = `${activePlayer.name} turns`;
+      this.createBoard(activePlayer,this.giveActiveBoard())
+    } 
     else gameUi.turn.innerText = "Place your ships";
   }
 
@@ -89,7 +92,7 @@ placeShipOnBoard(ship, target, turn, place) {
   const { name, holes } = ship.dataset;
   const { x, y } = target.dataset;
 
-  this.activePlayer().gameboard.placeShipe(
+  this.gameManager.placeShipe(
     name,
     Number(holes),
     Number(x),

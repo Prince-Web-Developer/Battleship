@@ -113,8 +113,8 @@ class Player {
   receiveAttack(x, y) {
     return this.gameboard.receiveAttack(x, y);
   }
-  placeShipe(name, length, x, y, turn) {
-    return this.gameboard.placeShipe(name, length, x, y, turn);
+  placeShipe(name, length, x, y, turn,place) {
+    return this.gameboard.placeShipe(name, length, x, y, turn,place);
   }
 }
 
@@ -258,8 +258,8 @@ class GameManager {
     this.#changeActivePlayer();
   }
 
-  placeShipe(name, length, x, y, turn = false) {
-    this.activePlayer.placeShipe(name, length, x, y, turn);
+  placeShipe(name, length, x, y, turn = false,place) {
+    this.activePlayer.placeShipe(name, length, x, y, turn,place);
     this.length = this.length - 1;
   }
 

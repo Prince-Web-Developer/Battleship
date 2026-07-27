@@ -27,8 +27,7 @@ class ShipsUi {
   }
 
   end() {
-    // all ships are place hide boar
-    this.shipsBoard.classList.add("none");
+    // all ships are place hide board
     this.ships.forEach((ship) => {
       ship.remove();
     });
@@ -54,6 +53,7 @@ class ShipsUi {
   }
 
   releaseCustomMouseUpEvent = (e, place = false) => {
+    if (!this.activeShip) return
     const data = {
       activeShip: this.activeShip,
       target: e.target,
