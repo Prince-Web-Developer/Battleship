@@ -14,9 +14,8 @@ class gameUi {
 
   constructor(gameMode) {
     this.gameManager = new GameManager(gameMode);
+    this.updateScreen()
     gameUi.turn.innerText = "Place your ships";
-    this.createBoard(this.gameManager.player1, gameUi.player1Board);
-    this.createBoard(this.gameManager.player2, gameUi.player2Board);
     this.loadEventListener();
   }
 
@@ -28,12 +27,20 @@ class gameUi {
 
     const activePlayer = this.activePlayer();
     gameUi.turn.innerText = `${activePlayer.name} turns`;
-    this.createBoard(activePlayer, this.giveActiveBoard());
+    this.createBoard(this.gameManager.player1, gameUi.player1Board);
+    this.createBoard(this.gameManager.player2, gameUi.player2Board);
   }
 
   loadEventListener() {
     helperUiMethods.addEventListener(gameUi.player1Board, "click", this.attack);
     helperUiMethods.addEventListener(gameUi.player2Board, "click", this.attack);
+
+
+    helperUiMethods.addEventListener(document,"computerTurn",(e) => {
+      const {x,y} = e.detail
+      const cell = this.getCell(gameUi.player1Board,x,y)
+      cell.click()
+    })
 
     helperUiMethods.addEventListener(
       document,
@@ -80,8 +87,11 @@ class gameUi {
     const { x, y } = ship.dataset;
     if (!x || !y) return null;
 
-    return board.querySelector(`[data-x="${x}"][data-y="${y}"]`);
+    return this.getCell(board,x,y)
   }
+
+
+  getCell = (board,x,y) => board.querySelector(`[data-x="${x}"][data-y="${y}"]`);
 
   isTargetOnBoard(board, target) {
     if (board.contains(target)) return true;

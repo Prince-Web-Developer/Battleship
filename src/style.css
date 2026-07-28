@@ -454,6 +454,15 @@ svg {
     justify-content: center;
   }
 
+
+  .cross{
+    background: red;
+  }
+
+  .dot{
+    background: lemonchiffon;
+  }
+
 }
 
 @keyframes error {

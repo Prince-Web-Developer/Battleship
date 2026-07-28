@@ -257,6 +257,18 @@ class GameManager {
       this.activePlayer === this.player1 ? this.player2 : this.player1;
     playerRecevingAttack.receiveAttack(x, y);
     this.#changeActivePlayer();
+
+    if (this.activePlayer instanceof Computer) {
+      this.computerTurn()
+    }
+  }
+
+  computerTurn(){
+    const cords = this.activePlayer.playTurn(this.player1.gameboard.gameboard)
+    const event = new CustomEvent("computerTurn",{
+      detail: {x: cords.x,y : cords.y}
+    })
+    document.dispatchEvent(event)
   }
 
   placeShipe(name, length, x, y, turn = false,place) {
