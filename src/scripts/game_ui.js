@@ -7,12 +7,16 @@ class gameUi {
   static player1Board = document.querySelector(".b1");
   static player2Board = document.querySelector(".b2");
   static turn = document.querySelector(".turn");
+  static countDownVideo = document.querySelector("#countDown");
+  static countDownVideoContainer = document.querySelector(
+    "#countDownContainer",
+  );
 
   constructor(gameMode) {
     this.gameManager = new GameManager(gameMode);
-    this.updateScreen();
-    this.createBoard(this.gameManager.player1,gameUi.player1Board)
-    this.createBoard(this.gameManager.player2,gameUi.player2Board)
+    gameUi.turn.innerText = "Place your ships";
+    this.createBoard(this.gameManager.player1, gameUi.player1Board);
+    this.createBoard(this.gameManager.player2, gameUi.player2Board);
     this.loadEventListener();
   }
 
@@ -20,13 +24,11 @@ class gameUi {
     const winner = this.gameManager.isGameOver();
     if (winner) {
       console.log(winner);
-    } 
-    if (this.gameManager.start){
-      const activePlayer = this.activePlayer()
-      gameUi.turn.innerText = `${activePlayer.name} turns`;
-      this.createBoard(activePlayer,this.giveActiveBoard())
-    } 
-    else gameUi.turn.innerText = "Place your ships";
+    }
+
+    const activePlayer = this.activePlayer();
+    gameUi.turn.innerText = `${activePlayer.name} turns`;
+    this.createBoard(activePlayer, this.giveActiveBoard());
   }
 
   loadEventListener() {
@@ -38,88 +40,96 @@ class gameUi {
       "customMousUp",
       this.placeManager,
       (e) => {
-        const ship = e.detail.activeShip
-        if(ship) {
-          shipsBoard.resetShip(ship)
+        const ship = e.detail.activeShip;
+        if (ship) {
+          shipsBoard.resetShip(ship);
           sounds.no();
         }
       },
     );
   }
 
- placeManager = (e) => {
-  const { activeShip: ship, target, place } = e.detail;
-  if (!ship) return;
+  placeManager = (e) => {
+    const { activeShip: ship, target, place } = e.detail;
+    if (!ship) return;
 
-  const board = this.giveActiveBoard();
-  const cell = this.getTargetCell(board, ship, target);
+    const board = this.giveActiveBoard();
+    const cell = this.getTargetCell(board, ship, target);
 
-  if (!cell) return;
+    if (!cell) return;
 
-  if (!this.isTargetOnBoard(board, cell)) {
-    throw new Error("No")
+    if (!this.isTargetOnBoard(board, cell)) {
+      throw new Error("No");
+    }
+
+    const turn = ship.dataset.turn === "1";
+
+    this.placeShipOnBoard(ship, cell, turn, place);
+
+    if (place) {
+      this.finishPlacement();
+      return;
+    }
+
+    this.previewPlacement(ship, cell, turn);
   };
 
-  const turn = ship.dataset.turn === "1";
+  getTargetCell(board, ship, target) {
+    if (target) return target;
 
-  this.placeShipOnBoard(ship, cell, turn, place);
+    const { x, y } = ship.dataset;
+    if (!x || !y) return null;
 
-  if (place) {
-    this.finishPlacement();
-    return;
+    return board.querySelector(`[data-x="${x}"][data-y="${y}"]`);
   }
 
-  this.previewPlacement(ship, cell, turn);
-};
+  isTargetOnBoard(board, target) {
+    if (board.contains(target)) return true;
 
-getTargetCell(board, ship, target) {
-  if (target) return target;
+    return false;
+  }
 
-  const { x, y } = ship.dataset;
-  if (!x || !y) return null;
+  placeShipOnBoard(ship, target, turn, place) {
+    const { name, holes } = ship.dataset;
+    const { x, y } = target.dataset;
 
-  return board.querySelector(`[data-x="${x}"][data-y="${y}"]`);
-}
+    this.gameManager.placeShipe(
+      name,
+      Number(holes),
+      Number(x),
+      Number(y),
+      turn,
+      place,
+    );
+  }
 
-isTargetOnBoard(board, target) {
-  if (board.contains(target)) return true;
+  finishPlacement() {
+    sounds.place();
+    if (this.gameManager.start) this.startGame();
+  }
 
-  
-  return false;
-}
+  hideVideo = (videoCon) => {
+    videoCon.classList.add("none");
+    this.updateScreen()
+  };
 
-placeShipOnBoard(ship, target, turn, place) {
-  const { name, holes } = ship.dataset;
-  const { x, y } = target.dataset;
+  startGame() {
+    helperUiMethods.playVideo(gameUi.countDownVideo,gameUi.countDownVideoContainer,this.hideVideo)
+  }
 
-  this.gameManager.placeShipe(
-    name,
-    Number(holes),
-    Number(x),
-    Number(y),
-    turn,
-    place
-  );
-}
+  previewPlacement(ship, target, turn) {
+    document.dispatchEvent(
+      new CustomEvent("placeShip", {
+        detail: {
+          ship,
+          x: target.dataset.x,
+          y: target.dataset.y,
+        },
+      }),
+    );
 
-finishPlacement() {
-  sounds.place();
-  this.updateScreen();
-}
-
-previewPlacement(ship, target, turn) {
-  document.dispatchEvent(
-    new CustomEvent("placeShip", {
-      detail: {
-        ship,
-        x: target.dataset.x,
-        y: target.dataset.y,
-      },
-    })
-  );
-
-  this.adjustShip(target, ship, turn);
-}
+    this.adjustShip(target, ship, turn);
+  }
 
   adjustShip(cell, ship, turn) {
     const shipBounds = ship.getBoundingClientRect();

@@ -110,23 +110,29 @@
             data-screen-id="game"
             value="comp"
             aria-label="computer"
-          >
-            
-          </button>
+          ></button>
           <button
             type="submit"
             class="two navigationButton"
             data-screen-id="game"
             value="two"
             aria-label="two players mode"
-          >
-          </button>
+          ></button>
         </div>
       </form>
     </div>
 
     <div id="game" class="none screen">
       <div class="errors"></div>
+      <div id="countDownContainer" class="videoCon none">
+        <video id="countDown" class="video" playsinline>
+          <source
+            src="/asssets/videos/chroma-keyed-video.webm"
+            type="video/webm"
+          />
+        </video>
+      </div>
+        
       <h1 class="turn"></h1>
       <div class="container">
         <div class="player p1">
@@ -140,12 +146,22 @@
       </div>
       <div class="shipBoard height40" tabindex="1">
         <div class="boardContainer">
-          <div class="downArrow"><svg xmlns="http://www.w3.org/2000/svg" height="62px" viewBox="0 -960 960 960" width="62px" fill="#000000"><path d="m280-400 200-200 200 200H280Z"/></svg></div>
+          <div class="downArrow">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              height="62px"
+              viewBox="0 -960 960 960"
+              width="62px"
+              fill="#000000"
+            >
+              <path d="m280-400 200-200 200 200H280Z" />
+            </svg>
+          </div>
         </div>
-        <p class="instructions">Click ship then close the menu and click on cell to place ship</p>
-        <div class="boardInner">
-         
-        </div>
+        <p class="instructions">
+          Click ship then close the menu and click on cell to place ship
+        </p>
+        <div class="boardInner"></div>
       </div>
     </div>
 

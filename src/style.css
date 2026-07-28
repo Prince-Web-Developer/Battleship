@@ -18,17 +18,18 @@ body {
   line-height: 2;
   -webkit-font-smoothing: antialiased;
   font-family: "Poppins", sans-serif;
-  font-size: clamp(1rem,0.8rem + 0.8vw,2rem);
+  font-size: clamp(1rem, 0.8rem + 0.8vw, 2rem);
 }
 
 img,
 picture,
-video,
 canvas,
 svg {
   display: block;
   max-width: 100%;
 }
+
+
 
 input,
 button,
@@ -64,11 +65,9 @@ h6 {
   isolation: isolate;
 }
 
-
-svg{
+svg {
   pointer-events: none;
 }
-
 
 /* home screen styles */
 
@@ -80,59 +79,56 @@ svg{
   flex-direction: column;
   align-items: center;
 
-  .menu{
-  list-style: none;
-  display: flex;
-  flex-direction: column;
-  gap: 40px;
-  padding: 0px;
+  .menu {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    padding: 0px;
+  }
+
+  li {
+    flex: 1;
+    display: flex;
+  }
+
+  .menu-button {
+    flex: 1;
+    border: 2px solid black;
+    color: black;
+    text-decoration: none;
+    border-radius: 4px;
+    padding: 10px 38px;
+    box-shadow:
+      rgba(0, 0, 0, 0.09) 0px 2px 1px,
+      rgba(0, 0, 0, 0.09) 0px 4px 2px,
+      rgba(0, 0, 0, 0.09) 0px 8px 4px,
+      rgba(0, 0, 0, 0.09) 0px 16px 8px,
+      rgba(0, 0, 0, 0.09) 0px 32px 16px;
+    transition: box-shadow 0.5s;
+  }
+
+  .menu-button:hover {
+    cursor: pointer;
+    background-color: darkgray;
+  }
+
+  .menu-button:active {
+    box-shadow: none;
+  }
 }
 
-li{
-  flex: 1;
-  display: flex;
-}
-
-.menu-button{
-  flex: 1;
-  border: 2px solid black;
-  color: black;
-  text-decoration: none;
-  border-radius: 4px;
-  padding: 10px 38px;
-  box-shadow: rgba(0, 0, 0, 0.09) 0px 2px 1px, rgba(0, 0, 0, 0.09) 0px 4px 2px, rgba(0, 0, 0, 0.09) 0px 8px 4px, rgba(0, 0, 0, 0.09) 0px 16px 8px, rgba(0, 0, 0, 0.09) 0px 32px 16px;
-  transition: box-shadow 0.5s;
-}
-
-.menu-button:hover{
-  cursor: pointer;
-  background-color: darkgray;
-}
-
-.menu-button:active{
-  box-shadow: none;
-}
-} 
-
-
-
-
-
-
-
-#canvas1{
+#canvas1 {
   position: fixed;
   pointer-events: none;
   inset: 0;
 }
 
-
-
-.none{
+.none {
   display: none !important;
 }
 
-#help{
+#help {
   background-color: pink;
   max-width: 100vw;
   min-height: 100vh;
@@ -142,66 +138,63 @@ li{
   align-items: center;
   padding: 20px;
 
-  .whiteContainer{
-    width: min(1000px,80%);
+  .whiteContainer {
+    width: min(1000px, 80%);
     background-color: white;
     border-radius: 10px;
     padding: 1em;
   }
 
-
-  .heading{
+  .heading {
     display: flex;
     justify-content: center;
     align-items: center;
   }
 
-  .flexColumn{
+  .flexColumn {
     display: flex;
     flex-direction: column;
     gap: 40px;
   }
 
-  .wikipedia{
+  .wikipedia {
     margin-left: 10px;
   }
 }
 
-.backParent{
+.backParent {
   display: flex;
   width: 100%;
   justify-content: flex-start;
   padding: 10px;
 }
 
-.back{
+.back {
   all: unset;
   border: 1px solid black;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: max(2.5em,50px);
-  height: max(2.5em,50px);
+  width: max(2.5em, 50px);
+  height: max(2.5em, 50px);
   border-radius: 50%;
   background-color: white;
 }
 
-.back:hover{
+.back:hover {
   cursor: pointer;
 }
 
-
-#play{
+#play {
   background-color: blue;
   position: relative;
   max-width: 100vw;
-  min-height:  100vh;
+  min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
 
-
-  .celling{
+  .celling {
     position: absolute;
     top: 0;
     z-index: 1;
@@ -214,43 +207,31 @@ li{
     border-top: 0;
   }
 
-  form{
+  form {
     display: flex;
     flex-direction: column;
     justify-content: center;
   }
 
-  .font,button::after{
+  .font,
+  button::after {
     font-family: "Bowlby One SC", sans-serif;
-    color: grey; 
+    color: grey;
     text-align: center;
     overflow: hidden;
   }
 
-  
-
-  
-
-  
-
-  .info{
+  .info {
     font-size: 1.5em;
   }
 
-  
-
-  
-
-  
-
-
-  .wrapper{
+  .wrapper {
     display: flex;
     flex-direction: column;
     gap: 50px;
   }
 
-  button{
+  button {
     all: unset;
     padding: 12px 18px;
     border: 2px solid grey;
@@ -258,53 +239,51 @@ li{
     background-color: black;
   }
 
-  .two:after{
-    content: "Two Players Mode"
+  .two:after {
+    content: "Two Players Mode";
   }
-  .comp:after{
+  .comp:after {
     content: "Computer";
   }
 
-  button::after{
-    background: linear-gradient(to right,black 50%,white 50%);
+  button::after {
+    background: linear-gradient(to right, black 50%, white 50%);
     background-size: 200%;
-    background-clip:text;
+    background-clip: text;
     width: 100%;
     height: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
-    transition: background 2s,color 2s;
+    transition:
+      background 2s,
+      color 2s;
   }
 
-  
-
-  button:hover{
+  button:hover {
     cursor: pointer;
   }
-  button:hover::after{
+  button:hover::after {
     background-position: 100% 0%;
     color: transparent;
   }
-  button:active{
+  button:active {
     transform: scale(0.9);
   }
 }
 
-
-
-#game{
-  border-collapse:collapse;
+#game {
+  border-collapse: collapse;
   max-width: 100vw;
   min-height: 100vh;
   position: relative;
-  padding: 10px;
+  padding: 40px;
   padding-bottom: 100px;
   display: flex;
   flex-direction: column;
   gap: 40px;
   align-items: center;
-  .container{
+  .container {
     display: flex;
     width: 100%;
     flex-wrap: wrap;
@@ -313,8 +292,7 @@ li{
     gap: 60px;
   }
 
-
-  .player{
+  .player {
     flex: 1;
     display: flex;
     flex-direction: column;
@@ -322,44 +300,39 @@ li{
     align-items: center;
   }
 
-
-  .board{
-    width: min(100%,500px);
+  .board {
+    width: min(100%, 500px);
     background: url("/asssets/images/art-removebg-preview\ \(1\).png");
     background-size: 1000px;
     background-position: center;
-    min-width: 280px;
+    min-width: 200px;
     display: grid;
-    grid-template-columns: repeat(10,1fr);
+    grid-template-columns: repeat(10, 1fr);
     cursor: pointer;
   }
 
-  .board > *{
+  .board > * {
     aspect-ratio: 1;
     border: 1px solid black;
-  
   }
 
-
-  .shipBoard{
+  .shipBoard {
     width: 80%;
     position: fixed;
-    z-index: 99;
+    z-index: 2;
     bottom: 0;
     border-radius: 12px 12px 0px 0px;
     background-color: cadetblue;
     transition: height 0.5s;
   }
 
-  .instructions{
+  .instructions {
     display: flex;
     justify-content: center;
     font-weight: bold;
   }
 
-  
-
-  .boardInner{
+  .boardInner {
     display: flex;
     flex-wrap: wrap;
     gap: 40px;
@@ -367,34 +340,31 @@ li{
     padding-bottom: 60px;
   }
 
-  .ship{
+  .ship {
     display: flex;
     flex-direction: column;
     align-items: center;
   }
 
-  .rotate{
+  .rotate {
     transform: rotateZ(90deg);
     transform-origin: top left;
   }
 
-  
-
-
-  .ship > p{
+  .ship > p {
     font-style: italic;
     font-weight: bold;
   }
 
-  .absolute{
+  .absolute {
     position: absolute;
   }
 
-  .pointerNone{
+  .pointerNone {
     pointer-events: none;
   }
 
-  .buttonCon{
+  .buttonCon {
     display: flex;
     position: relative;
     z-index: 1;
@@ -402,13 +372,7 @@ li{
     width: 100%;
   }
 
- 
-
-
-
-
-
-  .shipImgContainer{
+  .shipImgContainer {
     cursor: pointer;
     display: flex;
     gap: 20px;
@@ -416,39 +380,34 @@ li{
     touch-action: none;
   }
 
-
-  .buttonCon > button{
+  .buttonCon > button {
     padding: 0.5em;
     background-color: limegreen;
     cursor: pointer;
     pointer-events: auto;
   }
-  
-  #cancelShip{
+
+  #cancelShip {
     background-color: red;
   }
 
-  #rotateShip{
+  #rotateShip {
     background-color: aqua;
   }
 
-
-  .height40{
-    height:40px;
+  .height40 {
+    height: 40px;
   }
 
-
-  
-
-  .boardContainer{
+  .boardContainer {
     width: 100%;
     display: flex;
     justify-content: center;
     padding-bottom: 20px;
   }
 
-  .downArrow{
-    background-color:wheat;
+  .downArrow {
+    background-color: wheat;
     border-radius: 0px 0px 12px 12px;
     border: 1px solid black;
     border-top: 0;
@@ -460,62 +419,63 @@ li{
     cursor: pointer;
   }
 
-
-
-
-  .turn{
+  .turn {
     font-family: "Bowlby One SC", sans-serif;
   }
-  .errors{
+  .errors {
     position: absolute;
     pointer-events: none;
     top: 50%;
     left: 50%;
     opacity: 0;
     transform: translate(-50%, -50%);
-    color:red;
+    color: red;
     font-family: "Bowlby One SC", sans-serif;
-    
   }
 
-
-
-  .errorAnimation{
+  .errorAnimation {
     animation: error 2s ease-in forwards;
   }
 
-  .none{
+  .none {
     display: none;
+  }
+  
+
+  .videoCon {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+}
+
+@keyframes error {
+  0% {
+    transform: translateY(0) translate(-50%, -50%);
+    opacity: 1;
+  }
+
+  100% {
+    transform: translateY(-200px) translate(-50%, -50%);
+    opacity: 0;
   }
 }
 
-
-
-
-@keyframes error {
-    0%{
-      transform: translateY(0) translate(-50%, -50%);
-      opacity: 1;
-    }
-
-    100%{
-      transform: translateY(-200px) translate(-50%, -50%);
-      opacity: 0;
-    }
-  }
-
-@media screen and (max-width:600px) {
-  #help{
+@media screen and (max-width: 600px) {
+  #help {
     padding: 0;
   }
-  #help > .whiteContainer{
+  #help > .whiteContainer {
     width: 100%;
     border-radius: 0;
   }
-  ul{
+  ul {
     padding: 0;
   }
-  li{
+  li {
     list-style: none;
   }
 }
