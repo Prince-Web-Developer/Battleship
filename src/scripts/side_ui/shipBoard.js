@@ -124,12 +124,14 @@ class ShipsUi {
     target.classList.add("absolute", "pointerNone");
     this.shipsBoard.classList.add("height40");
     this.activeShip = target;
+    document.body.style.overflowY = "hidden"
     this.gameScreen.append(this.activeShip);
     this.#moveShip();
   }
 
   finishDragging(ship) {
     ship.classList.remove("pointerNone");
+    document.body.style.overflowY = "visible"
     document.removeEventListener("pointermove", this.mouseCoverFn);
     this.activeShip = null;
   }
