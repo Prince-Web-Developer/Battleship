@@ -36,8 +36,8 @@ class ShipsUi {
   }
 
   resetShip(ship) {
-    ship.classList.remove("absolute", "place", "rotate");
-    ship.dataset.turn = "0";
+    ship.classList.remove("absolute", "place");
+    ship.classList.add("normal")
     ship.remove(this.buttonContainer);
     const parent = this.innerBoard.querySelector(`.${ship.dataset.name}`);
     parent.insertBefore(ship, parent.lastElementChild);
@@ -122,6 +122,7 @@ class ShipsUi {
     const target = event.currentTarget;
     if (target.classList.contains("place")) return;
     target.classList.add("absolute", "pointerNone");
+    target.classList.remove("normal")
     this.shipsBoard.classList.add("height40");
     this.activeShip = target;
     document.body.style.overflowY = "hidden"

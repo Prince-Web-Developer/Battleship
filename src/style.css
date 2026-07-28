@@ -351,6 +351,10 @@ svg {
     transform-origin: top left;
   }
 
+  .normal{
+    transform: rotateZ(0deg) !important;
+  }
+
   .ship > p {
     font-style: italic;
     font-weight: bold;
