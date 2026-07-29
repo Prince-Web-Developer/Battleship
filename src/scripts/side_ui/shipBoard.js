@@ -21,6 +21,7 @@ class ShipsUi {
 
   init() {
     // we need show board here and fill ships in it
+    this.end()
     this.activeShip = null;
     this.shipsBoard.classList.remove("none");
     this.#createShips();
@@ -114,7 +115,7 @@ class ShipsUi {
 
     shipContainer.append(shipName, shipImgContainer, holes);
     shipContainer.classList.add("ship", name);
-    this.ships.push(shipContainer);
+    this.ships.push(shipImgContainer);
     return shipContainer;
   }
 

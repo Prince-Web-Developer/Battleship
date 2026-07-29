@@ -276,12 +276,11 @@ class GameManager {
   }
 
   isGameOver() {
-    const winner = this.activePlayer.sunkShips().gameOver
-      ? this.activePlayer === this.player1
-        ? this.player2.name
-        : this.player1.name
-      : null;
-    return winner;
+    const player1 = this.player1.sunkShips().gameOver
+    const player2 = this.player1.sunkShips().gameOver
+      
+    if (player1) return this.player2.name
+    if (player2) return this.player1.name
   }
 }
 

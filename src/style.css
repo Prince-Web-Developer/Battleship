@@ -463,6 +463,25 @@ svg {
     background: lemonchiffon;
   }
 
+
+  #gameOverScreen{
+    position: fixed;
+    inset: 0;
+    margin: auto;
+    padding: 20px;
+    text-align: center;
+    border-style: dashed;
+  }
+
+  .menuCon{
+    justify-content: center;
+  }
+
+  .menuButton > img{
+    pointer-events: none;
+  }
+
+
 }
 
 @keyframes error {
