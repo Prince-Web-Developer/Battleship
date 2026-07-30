@@ -19,8 +19,10 @@ class helperUiMethods {
     helperUiMethods.errors.addEventListener("animationend", () => {
       helperUiMethods.errors.classList.remove("errorAnimation");
     });
-    helperUiMethods.addEventListener(document,"keydown",(e) => (e.key === "Backspace" && helperUiMethods.modal.open) ? helperUiMethods.modalCloseBtn.click() : "")
-    helperUiMethods.addEventListener(this.modalCloseBtn,"click",() => helperUiMethods.modal.close())
+    helperUiMethods.addEventListener(window, "popstate", () => {
+      if (helperUiMethods.modal.open) helperUiMethods.modalCloseBtn.click()
+    })
+    helperUiMethods.addEventListener(helperUiMethods.modalCloseBtn,"click",() => helperUiMethods.modal.close())
   }
 
   static loadVideoEvents(video, container, callbackAfterPlaying) {
