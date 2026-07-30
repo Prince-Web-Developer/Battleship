@@ -277,7 +277,7 @@ class GameManager {
 
   isGameOver() {
     const player1 = this.player1.sunkShips().gameOver
-    const player2 = this.player1.sunkShips().gameOver
+    const player2 = this.player2.sunkShips().gameOver
       
     if (player1) return this.player2.name
     if (player2) return this.player1.name
