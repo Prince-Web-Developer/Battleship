@@ -482,7 +482,100 @@ svg {
   }
 
 
+  #passScreen{
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    display: flex;
+    align-items: stretch;
+    /* transition: all 0.5s; */
+    .yellow{
+      flex: 1;
+      background-color: #FFC100;
+      transform-origin: top;
+      transform: translateY(-100%);
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      flex-direction: column;
+    }
+
+
+    .yellow > div{
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .yellow  p{
+      font-size: 5em;
+      animation: roaming 2s 0s infinite alternate;
+    }
+
+    .yellow div > button{
+      all: unset;
+      border: 2px solid black;
+      background-color: white;
+      width: 2em;
+      height: 2em;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    #passScreenButton{
+      all: unset;
+      padding: 12px 20px;
+      font-size: 1.2em;
+      border: 3px solid black;
+      border-radius: 12px;
+      background-color: white;
+    }
+
+    #passScreenButton:hover{
+      cursor: pointer;
+    }
+  }
+
+  #passScreen.visible{
+    z-index: 99;
+  }
+
+  .visible .yellow{
+    animation: fallDown 0.5s ease-in forwards;
+  }
+
+  button:hover{
+    cursor: pointer;
+  }
+
+
 }
+
+
+@keyframes fallDown {
+  0%{
+    transform: translateY(-100%);
+  }
+  100%{
+    transform: translateY(0%);
+  }
+}
+
+@keyframes roaming {
+  0%{
+    transform: rotate(30deg);
+  }
+  50%{
+    transform: rotate(0deg);
+  }
+  100%{
+    transform: rotate(-30deg);
+  }
+}
+
 
 @keyframes error {
   0% {

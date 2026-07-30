@@ -14,14 +14,19 @@ class gameUi {
   static koVideo = document.querySelector("#ko");
   static koVideoContainer = document.querySelector("#koContainer");
 
+  static passScreen = document.querySelector("#passScreen");
+  static passScreenButton = document.querySelector("#passScreenButton");
+  static player1NameBoard = document.querySelector("#player1Name");
+  static player2NameBoard = document.querySelector("#player2Name");
+
   constructor() {
     this.loadEventListener();
-    this.loadVideos()
+    this.loadVideos();
   }
 
   loadVideos() {
-    gameUi.countDownVideo.load()
-    gameUi.koVideo.load()
+    gameUi.countDownVideo.load();
+    gameUi.koVideo.load();
   }
 
   init(gameMode) {
@@ -29,6 +34,8 @@ class gameUi {
     this.updateScreen();
     gameUi.turn.innerText = "Place your ships";
     this.winner = undefined;
+    gameUi.player1NameBoard.innerText = this.gameManager.player1.name
+    gameUi.player2NameBoard.innerText = this.gameManager.player2.name
   }
 
   updateScreen() {
@@ -56,6 +63,11 @@ class gameUi {
     });
 
     helperUiMethods.addEventListener(
+      gameUi.passScreenButton,
+      "click",
+      this.pass,
+    );
+    helperUiMethods.addEventListener(
       document,
       "customMousUp",
       this.placeManager,
@@ -66,6 +78,12 @@ class gameUi {
           sounds.no();
         }
       },
+    );
+
+    helperUiMethods.addEventListener(
+      document,
+      "passScreen",
+      this.showPassScreen,
     );
 
     helperUiMethods.loadVideoEvents(
@@ -79,6 +97,25 @@ class gameUi {
       this.koVideoCallback,
     );
   }
+
+  showPassScreen = () => {
+    if (!this.gameManager.isGameOver()) gameUi.passScreen.classList.add("visible");
+    else gameUi.passScreen.classList.remove("visible");
+  }
+
+  pass = () => {
+    if (!this.gameManager.start) shipsBoard.init(false);
+    gameUi.passScreen.classList.remove("visible");
+
+    const activePlayerShipClass =
+      this.activePlayer() === this.gameManager.player1 ? "s1" : "s2";
+
+    document.querySelectorAll(".shipImgContainer").forEach((ship) => {
+      if (ship.classList.contains(activePlayerShipClass))
+        ship.classList.remove("none");
+      else ship.classList.add("none");
+    });
+  };
 
   countDownVideoCallback = (videoContainer) => {
     this.hideVideo(videoContainer);

@@ -232,6 +232,7 @@ class GameManager {
   constructor(gameMode) {
 
     this.length = gameMode === "two" ? ships.length * 2 : ships.length
+    this.half = this.length / 2
     this.player1 = new Player("player1");
     this.player2 =
       gameMode === "two"
@@ -258,12 +259,11 @@ class GameManager {
     playerRecevingAttack.receiveAttack(x, y);
     this.#changeActivePlayer();
 
-    if (this.activePlayer instanceof Computer) {
-      this.computerTurn()
-    }
+    if (this.activePlayer instanceof Computer) this.fireComputerTurn()
+    else if(this.player2.constructor === Player) this.firePassScreen()
   }
 
-  computerTurn(){
+  fireComputerTurn(){
     const cords = this.activePlayer.playTurn(this.player1.gameboard.gameboard)
     const event = new CustomEvent("computerTurn",{
       detail: {x: cords.x,y : cords.y}
@@ -271,8 +271,18 @@ class GameManager {
     document.dispatchEvent(event)
   }
 
-  placeShipe(name, length, x, y, turn = false,place) {
-    if(this.activePlayer.placeShipe(name, length, x, y, turn,place)) this.length = this.length - 1 
+  firePassScreen() {
+    const passScreen = new CustomEvent("passScreen")
+    document.dispatchEvent(passScreen)
+  }
+
+  placeShipe(name, length, x, y, turn = false, place) {
+    const placed = this.activePlayer.placeShipe(name, length, x, y, turn, place)
+    if (placed) this.length = this.length - 1 
+    if (this.player2.constructor === Player && this.length === this.half && placed) {
+      this.#changeActivePlayer()
+      this.firePassScreen()
+    }
   }
 
   isGameOver() {

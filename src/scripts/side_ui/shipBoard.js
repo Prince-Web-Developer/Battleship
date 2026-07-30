@@ -19,9 +19,9 @@ class ShipsUi {
     this.gameScreen = document.querySelector("#game");
   }
 
-  init() {
+  init(newGame = true) {
     // we need show board here and fill ships in it
-    this.end()
+    if(newGame) this.end()
     this.activeShip = null;
     this.shipsBoard.classList.remove("none");
     this.#createShips();
@@ -79,15 +79,16 @@ class ShipsUi {
   #createShips() {
     const fragment = document.createDocumentFragment();
     const cellWidth = document.querySelector(".cell").clientWidth;
+    const shipOwner = this.ships.length > 0 ? "s2" : "s1"
     ships.forEach((ship) => {
-      fragment.append(this.#createShip(ship, cellWidth));
+      fragment.append(this.#createShip(ship, cellWidth,shipOwner));
     });
 
     this.innerBoard.innerHTML = "";
     this.innerBoard.append(fragment);
   }
 
-  #createShip(ship, cellWidth) {
+  #createShip(ship, cellWidth,shipOwner) {
     const { name, length, img } = ship;
     const shipContainer = document.createElement("div");
 
@@ -100,7 +101,7 @@ class ShipsUi {
     shipImg.style.height = `${cellWidth}px`;
 
     const shipImgContainer = document.createElement("div");
-    shipImgContainer.classList.add("shipImgContainer");
+    shipImgContainer.classList.add("shipImgContainer",shipOwner);
     shipImgContainer.append(shipImg);
     shipImgContainer.dataset.holes = length;
     shipImgContainer.dataset.name = name;
