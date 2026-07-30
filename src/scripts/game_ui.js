@@ -16,6 +16,12 @@ class gameUi {
 
   constructor() {
     this.loadEventListener();
+    this.loadVideos()
+  }
+
+  loadVideos() {
+    gameUi.countDownVideo.load()
+    gameUi.koVideo.load()
   }
 
   init(gameMode) {
