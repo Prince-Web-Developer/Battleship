@@ -11,24 +11,26 @@ class gameUi {
   static countDownVideoContainer = document.querySelector(
     "#countDownContainer",
   );
-  static koVideo = document.querySelector("#ko")
-  static koVideoContainer = document.querySelector("#koContainer")
+  static koVideo = document.querySelector("#ko");
+  static koVideoContainer = document.querySelector("#koContainer");
 
-  constructor(gameMode) {
-    this.gameManager = new GameManager(gameMode);
-    this.updateScreen()
-    gameUi.turn.innerText = "Place your ships";
+  constructor() {
     this.loadEventListener();
-    this.winner = undefined
+  }
+
+  init(gameMode) {
+    this.gameManager = new GameManager(gameMode);
+    this.updateScreen();
+    gameUi.turn.innerText = "Place your ships";
+    this.winner = undefined;
   }
 
   updateScreen() {
     this.winner = this.gameManager.isGameOver();
-    
 
     if (this.winner) {
-      this.playVideo(gameUi.koVideo,gameUi.koVideoContainer)
-      return
+      this.playVideo(gameUi.koVideo, gameUi.koVideoContainer);
+      return;
     }
 
     const activePlayer = this.activePlayer();
@@ -41,12 +43,11 @@ class gameUi {
     helperUiMethods.addEventListener(gameUi.player1Board, "click", this.attack);
     helperUiMethods.addEventListener(gameUi.player2Board, "click", this.attack);
 
-
-    helperUiMethods.addEventListener(document,"computerTurn",(e) => {
-      const {x,y} = e.detail
-      const cell = this.getCell(gameUi.player1Board,x,y)
-      cell.click()
-    })
+    helperUiMethods.addEventListener(document, "computerTurn", (e) => {
+      const { x, y } = e.detail;
+      const cell = this.getCell(gameUi.player1Board, x, y);
+      cell.click();
+    });
 
     helperUiMethods.addEventListener(
       document,
@@ -61,19 +62,27 @@ class gameUi {
       },
     );
 
-    helperUiMethods.loadVideoEvents(gameUi.countDownVideo,gameUi.countDownVideoContainer,this.countDownVideoCallback)
-    helperUiMethods.loadVideoEvents(gameUi.koVideo,gameUi.koVideoContainer,this.koVideoCallback)
+    helperUiMethods.loadVideoEvents(
+      gameUi.countDownVideo,
+      gameUi.countDownVideoContainer,
+      this.countDownVideoCallback,
+    );
+    helperUiMethods.loadVideoEvents(
+      gameUi.koVideo,
+      gameUi.koVideoContainer,
+      this.koVideoCallback,
+    );
   }
 
   countDownVideoCallback = (videoContainer) => {
-    this.hideVideo(videoContainer)
-    this.updateScreen()
-  }
+    this.hideVideo(videoContainer);
+    this.updateScreen();
+  };
 
   koVideoCallback = (videoContainer) => {
-    this.hideVideo(videoContainer)
-    helperUiMethods.showModal(this.winner)
-  }
+    this.hideVideo(videoContainer);
+    helperUiMethods.showModal(this.winner);
+  };
 
   placeManager = (e) => {
     const { activeShip: ship, target, place } = e.detail;
@@ -106,11 +115,11 @@ class gameUi {
     const { x, y } = ship.dataset;
     if (!x || !y) return null;
 
-    return this.getCell(board,x,y)
+    return this.getCell(board, x, y);
   }
 
-
-  getCell = (board,x,y) => board.querySelector(`[data-x="${x}"][data-y="${y}"]`);
+  getCell = (board, x, y) =>
+    board.querySelector(`[data-x="${x}"][data-y="${y}"]`);
 
   isTargetOnBoard(board, target) {
     if (board.contains(target)) return true;
@@ -141,14 +150,14 @@ class gameUi {
     videoCon.classList.add("none");
   };
 
-  playVideo(video,container){
-    container.classList.remove("none")
+  playVideo(video, container) {
+    container.classList.remove("none");
     video.play();
   }
 
   startGame() {
-    this.playVideo(gameUi.countDownVideo,gameUi.countDownVideoContainer)
-    this.updateScreen()
+    this.playVideo(gameUi.countDownVideo, gameUi.countDownVideoContainer);
+    this.updateScreen();
   }
 
   previewPlacement(ship, target, turn) {
@@ -223,4 +232,8 @@ class gameUi {
 
 // to laod ships and on and off ship Board
 
-export { gameUi };
+
+
+const ui = new gameUi()
+
+export { ui };
