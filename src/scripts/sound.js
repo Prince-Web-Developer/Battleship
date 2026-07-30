@@ -3,11 +3,18 @@ import mouseClick from "/asssets/sounds/universfield-computer-mouse-click-352734
 import no from "/asssets/sounds/no.mp3"
 import select from "/asssets/sounds/select.mp3"
 import place from "/asssets/sounds/place.mp3"
+import winterWind from "/asssets/sounds/winterWind.mp3"
 
 
 
 
-const audioFiles = [{name:"mouse",audio:mouseClick},{name:"no",audio:no},{name:"select",audio:select},{name:"place",audio:place}]
+const audioFiles = [
+  { name: "mouse", audio: mouseClick },
+  { name: "no", audio: no },
+  { name: "select", audio: select },
+  { name: "place", audio: place },
+  { name: "winterWind",audio:winterWind },
+];
 
 
 
@@ -20,8 +27,18 @@ const sounds = {
 audioFiles.forEach((audio) => {
     const sound = new Audio(audio.audio)
     sound.load()
-    sounds[audio.name] = () => {
-        sound.play().catch((e) => console.log(e))
+    sounds[audio.name] = (stop = false) => {
+        try {
+            if (stop) {
+            sound.pause();
+            return
+           }
+            sound.play()
+        }
+        catch (e) {
+            console.log(e);
+        }
+        
     } 
 })
 

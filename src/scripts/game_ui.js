@@ -19,6 +19,8 @@ class gameUi {
   static player1NameBoard = document.querySelector("#player1Name");
   static player2NameBoard = document.querySelector("#player2Name");
 
+  static winterWindAudioButton = document.querySelector("#winterWind");
+
   constructor() {
     this.loadEventListener();
     this.loadVideos();
@@ -34,8 +36,8 @@ class gameUi {
     this.updateScreen();
     gameUi.turn.innerText = "Place your ships";
     this.winner = undefined;
-    gameUi.player1NameBoard.innerText = this.gameManager.player1.name
-    gameUi.player2NameBoard.innerText = this.gameManager.player2.name
+    gameUi.player1NameBoard.innerText = this.gameManager.player1.name;
+    gameUi.player2NameBoard.innerText = this.gameManager.player2.name;
   }
 
   updateScreen() {
@@ -61,6 +63,12 @@ class gameUi {
       const cell = this.getCell(gameUi.player1Board, x, y);
       cell.click();
     });
+
+    helperUiMethods.addEventListener(
+      gameUi.winterWindAudioButton,
+      "click",
+      () => this.passScreenSound(),
+    );
 
     helperUiMethods.addEventListener(
       gameUi.passScreenButton,
@@ -98,10 +106,22 @@ class gameUi {
     );
   }
 
-  showPassScreen = () => {
-    if (!this.gameManager.isGameOver()) gameUi.passScreen.classList.add("visible");
-    else gameUi.passScreen.classList.remove("visible");
+  passScreenSound = (off = false) => {
+    let mute
+    if (off) {
+      gameUi.winterWindAudioButton.classList.add("mute")
+      mute = true
+    }
+    else mute = gameUi.winterWindAudioButton.classList.toggle("mute");
+    if (!mute) sounds["winterWind"]()
+    else sounds["winterWind"](true)
   }
+
+  showPassScreen = () => {
+    if (!this.gameManager.isGameOver())
+      gameUi.passScreen.classList.add("visible");
+    else gameUi.passScreen.classList.remove("visible");
+  };
 
   pass = () => {
     if (!this.gameManager.start) shipsBoard.init(false);
@@ -109,6 +129,8 @@ class gameUi {
 
     const activePlayerShipClass =
       this.activePlayer() === this.gameManager.player1 ? "s1" : "s2";
+    
+    this.passScreenSound(true)
 
     document.querySelectorAll(".shipImgContainer").forEach((ship) => {
       if (ship.classList.contains(activePlayerShipClass))

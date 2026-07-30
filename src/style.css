@@ -513,7 +513,11 @@ svg {
       animation: roaming 2s 0s infinite alternate;
     }
 
-    .yellow div > button{
+    #winterWind.mute{
+      background-image: url("/asssets/images/nosound.svg");
+    }
+
+    #winterWind{
       all: unset;
       border: 2px solid black;
       background-color: white;
@@ -523,7 +527,13 @@ svg {
       display: flex;
       justify-content: center;
       align-items: center;
+      background: url("/asssets/images/sound.svg");
+      background-position: center;
+      background-size: contain;
+      background-repeat: no-repeat;
     }
+
+    
 
     #passScreenButton{
       all: unset;
@@ -538,6 +548,8 @@ svg {
       cursor: pointer;
     }
   }
+
+  
 
   #passScreen.visible{
     z-index: 99;
